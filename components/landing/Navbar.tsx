@@ -22,32 +22,32 @@ export const Navbar = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-6">
-          <Link 
-            href="/#features" 
+          <Link
+            href="/#features"
             className={`font-medium hover:text-primary transition-colors ${
               pathname === "/#features" ? "text-primary" : ""
             }`}
           >
             Tính năng
           </Link>
-          <Link 
-            href="/courses" 
+          <Link
+            href="/courses"
             className={`font-medium hover:text-primary transition-colors ${
               pathname === "/courses" ? "text-primary" : ""
             }`}
           >
             Khoá học
           </Link>
-          <Link 
-            href="/#about" 
+          <Link
+            href="/#about"
             className={`font-medium hover:text-primary transition-colors ${
               pathname === "/#about" ? "text-primary" : ""
             }`}
           >
             Về chúng tôi
           </Link>
-          <Link 
-            href="/pricing" 
+          <Link
+            href="/pricing"
             className={`font-medium hover:text-primary transition-colors ${
               pathname === "/pricing" ? "text-primary" : ""
             }`}
@@ -58,10 +58,10 @@ export const Navbar = () => {
 
         <div className="hidden md:flex items-center space-x-4">
           <Button variant="outline" className="rounded-full" asChild>
-            <Link href="/login">Đăng nhập</Link>
+            <Link href="/sign-in">Đăng nhập</Link>
           </Button>
           <Button className="rounded-full" asChild>
-            <Link href="/signup">Bắt đầu học ngay</Link>
+            <Link href="/sign-up">Bắt đầu học ngay</Link>
           </Button>
         </div>
 
@@ -138,10 +138,14 @@ export const Navbar = () => {
           </Link>
           <div className="pt-4 space-y-3">
             <Button variant="outline" className="w-full rounded-full" asChild>
-              <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>Đăng nhập</Link>
+              <Link href="/sign-in" onClick={() => setIsMobileMenuOpen(false)}>
+                Đăng nhập
+              </Link>
             </Button>
             <Button className="w-full rounded-full" asChild>
-              <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)}>Bắt đầu học ngay</Link>
+              <Link href="/sign-up" onClick={() => setIsMobileMenuOpen(false)}>
+                Bắt đầu học ngay
+              </Link>
             </Button>
           </div>
         </div>

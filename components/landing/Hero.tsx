@@ -1,8 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { createUser } from "@/lib/actions/user.action";
 
 export const Hero = () => {
+  async function testConnect() {
+    await createUser();
+  }
   return (
     <section className="py-16 md:py-24 bg-gradient-to-b from-emerald-50 to-white">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -12,20 +16,32 @@ export const Hero = () => {
             <span className="text-primary"> hiệu quả</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8">
-            Khám phá cách học toán mới với phương pháp học tập tương tác và cá nhân hoá, giúp bạn tiến bộ mỗi ngày chỉ với 15 phút.
+            Khám phá cách học toán mới với phương pháp học tập tương tác và cá
+            nhân hoá, giúp bạn tiến bộ mỗi ngày chỉ với 15 phút.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button size="lg" className="rounded-full text-lg font-medium px-8 py-6 h-auto">
+            <Button
+              onClick={testConnect}
+              size="lg"
+              className="rounded-full text-lg font-medium px-8 py-6 h-auto"
+            >
               Bắt đầu miễn phí
             </Button>
-            <Button variant="outline" size="lg" className="rounded-full text-lg font-medium px-8 py-6 h-auto">
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full text-lg font-medium px-8 py-6 h-auto"
+            >
               Xem demo
             </Button>
           </div>
           <div className="mt-10 flex items-center space-x-6">
             <div className="flex -space-x-2">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center overflow-hidden">
+                <div
+                  key={i}
+                  className="w-10 h-10 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center overflow-hidden"
+                >
                   <span className="text-xs font-medium">HV</span>
                 </div>
               ))}
@@ -33,13 +49,20 @@ export const Hero = () => {
             <div>
               <div className="flex items-center mb-1">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <svg key={star} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <svg
+                    key={star}
+                    className="w-5 h-5 text-yellow-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                   </svg>
                 ))}
               </div>
               <p className="text-sm text-gray-600">
-                <span className="font-medium">4.9/5</span> từ hơn 10,000 học viên
+                <span className="font-medium">4.9/5</span> từ hơn 10,000 học
+                viên
               </p>
             </div>
           </div>
@@ -52,7 +75,9 @@ export const Hero = () => {
               <div className="w-24 h-24 bg-emerald-100 rounded-full mb-6 flex items-center justify-center">
                 <span className="text-4xl">🦉</span>
               </div>
-              <h3 className="text-xl font-bold text-center mb-4">Bắt đầu hành trình học toán</h3>
+              <h3 className="text-xl font-bold text-center mb-4">
+                Bắt đầu hành trình học toán
+              </h3>
               <div className="grid grid-cols-3 gap-3 w-full max-w-xs">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div

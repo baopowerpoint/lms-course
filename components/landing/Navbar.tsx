@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
@@ -55,15 +56,17 @@ export const Navbar = () => {
             Bảng giá
           </Link>
         </div>
-
-        <div className="hidden md:flex items-center space-x-4">
+<SignedIn>
+<UserButton/>
+        </SignedIn>
+        <SignedOut><div className="hidden md:flex items-center space-x-4">
           <Button variant="outline" className="rounded-full" asChild>
             <Link href="/sign-in">Đăng nhập</Link>
           </Button>
           <Button className="rounded-full" asChild>
             <Link href="/sign-up">Bắt đầu học ngay</Link>
           </Button>
-        </div>
+        </div></SignedOut>
 
         {/* Mobile menu button */}
         <button
@@ -136,6 +139,7 @@ export const Navbar = () => {
           >
             Bảng giá
           </Link>
+          <SignedOut>
           <div className="pt-4 space-y-3">
             <Button variant="outline" className="w-full rounded-full" asChild>
               <Link href="/sign-in" onClick={() => setIsMobileMenuOpen(false)}>
@@ -147,7 +151,7 @@ export const Navbar = () => {
                 Bắt đầu học ngay
               </Link>
             </Button>
-          </div>
+          </div></SignedOut>
         </div>
       )}
     </nav>

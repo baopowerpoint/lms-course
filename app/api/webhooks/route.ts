@@ -78,7 +78,6 @@ export async function POST(req: Request) {
     // Create a new user in your database
     const result = await updateUser({
       clerkId: id,
-
       name: `${first_name}${last_name ? ` ${last_name}` : ""}`,
       username: username!,
       email: email_addresses[0].email_address,

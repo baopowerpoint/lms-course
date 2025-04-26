@@ -1,6 +1,8 @@
+
 import mongoose, { Mongoose } from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
+
 if (!MONGODB_URI) {
   throw new Error("MONGODB_URI is required");
 }
@@ -28,7 +30,7 @@ const dbConnect = async (): Promise<Mongoose> => {
   }
   if (!cached.promise) {
     cached.promise = mongoose
-      .connect(MONGODB_URI, { dbName: "presentx" })
+      .connect(MONGODB_URI, { dbName: "dev-lms" })
       .then((result) => {
         return result;
       })
@@ -37,7 +39,6 @@ const dbConnect = async (): Promise<Mongoose> => {
       });
   }
   cached.conn = await cached.promise;
-  console.log("DB connected!")
   return cached.conn;
 };
 export default dbConnect;

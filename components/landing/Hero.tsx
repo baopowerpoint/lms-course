@@ -5,7 +5,13 @@ import { createUser, tryConnect } from "@/lib/actions/user.action";
 
 export const Hero = () => {
   async function testConnect() {
-    await tryConnect()
+    await createUser({
+        clerkId: "clerkId",
+        username: 'baopowerpoint',
+        name: "powerpoi",
+        email: "baopowerpoint@gmail.com",
+        picture: ""
+    })
   }
   
   return (

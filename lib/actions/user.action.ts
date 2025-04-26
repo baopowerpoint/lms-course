@@ -7,14 +7,17 @@ import { parseStringify } from "../utils";
 import { User as UserModel } from "@/database";
 import { revalidatePath } from "next/cache";
 import { NotFoundError } from "../http-errors";
+import dbConnect from "../mongoose";
 
 
 export async function createUser(params: CreateUserParams): Promise<ActionResponse<User>> {
   const validationResult = await action(
-    { params }
-
+    {
+      params
+    }
   )
   if (validationResult instanceof Error) { return handleError(validationResult) as ErrorResponse }
+
   const { clerkId, name, username, email, picture } = validationResult.params!;
   try {
     const newUser = await UserModel.create({
@@ -78,4 +81,7 @@ export async function deleteUser(params: {clerkId: string}){
   } catch (error) {
     return handleError(error) as ErrorResponse
   }
+}
+export async function tryConnect(){
+  await dbConnect();
 }

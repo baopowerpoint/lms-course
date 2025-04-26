@@ -1,12 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { createUser } from "@/lib/actions/user.action";
+import { createUser, tryConnect } from "@/lib/actions/user.action";
 
 export const Hero = () => {
   async function testConnect() {
-    await createUser();
+    await tryConnect()
   }
+  
   return (
     <section className="py-16 md:py-24 bg-gradient-to-b from-emerald-50 to-white">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">

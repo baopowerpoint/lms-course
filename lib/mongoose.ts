@@ -37,6 +37,7 @@ const dbConnect = async (): Promise<Mongoose> => {
       });
   }
   cached.conn = await cached.promise;
+  console.log("DB connected!")
   return cached.conn;
 };
 export default dbConnect;

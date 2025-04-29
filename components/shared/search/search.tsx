@@ -1,16 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { cn, formUrlQuery, removeKeysFromUrlQuery } from "@/lib/utils";
-import { Search } from "lucide-react";
+import { Loader2, Search as SearchIcon } from "lucide-react";
 interface Props {
   route: string;
 
   placeholder: string;
   otherClasses?: string;
 }
-const LocalSearch = ({ route, placeholder, otherClasses }: Props) => {
+const Search = ({ route, placeholder, otherClasses }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -49,7 +49,7 @@ const LocalSearch = ({ route, placeholder, otherClasses }: Props) => {
         otherClasses
       )}
     >
-      <Search name="search" size={20} className="text_secondary" />
+      <SearchIcon size={20} className="text_secondary" />
       <Input
         type="text"
         placeholder={placeholder}
@@ -60,5 +60,11 @@ const LocalSearch = ({ route, placeholder, otherClasses }: Props) => {
     </div>
   );
 };
-
+const LocalSearch = (props: Props) => {
+  return (
+    <Suspense fallback={<Loader2 className="animate-spin w-5" />}>
+      <Search {...props} />
+    </Suspense>
+  );
+};
 export default LocalSearch;

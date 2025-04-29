@@ -17,4 +17,3 @@ interface RouteParams {
   searchParams: Promise<Record<string, string>>;
 }
 
-interface User

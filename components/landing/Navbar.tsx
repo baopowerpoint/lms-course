@@ -56,48 +56,52 @@ export const Navbar = () => {
             Bảng giá
           </Link>
         </div>
-<SignedIn>
-<UserButton/>
-        </SignedIn>
-        <SignedOut><div className="hidden md:flex items-center space-x-4">
-          <Button variant="outline" className="rounded-full" asChild>
-            <Link href="/sign-in">Đăng nhập</Link>
-          </Button>
-          <Button className="rounded-full" asChild>
-            <Link href="/sign-up">Bắt đầu học ngay</Link>
-          </Button>
-        </div></SignedOut>
-
         {/* Mobile menu button */}
-        <button
-          className="md:hidden text-gray-700"
-          onClick={toggleMobileMenu}
-          aria-label="Toggle menu"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+        <div className="flex items-center gap-2">
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+          <SignedOut>
+            <div className="hidden md:flex items-center space-x-4">
+              <Button variant="outline" className="rounded-full" asChild>
+                <Link href="/sign-in">Đăng nhập</Link>
+              </Button>
+              <Button className="rounded-full" asChild>
+                <Link href="/sign-up">Bắt đầu học ngay</Link>
+              </Button>
+            </div>
+          </SignedOut>
+
+          <button
+            className="md:hidden text-gray-700"
+            onClick={toggleMobileMenu}
+            aria-label="Toggle menu"
           >
-            {isMobileMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {isMobileMenuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -140,18 +144,25 @@ export const Navbar = () => {
             Bảng giá
           </Link>
           <SignedOut>
-          <div className="pt-4 space-y-3">
-            <Button variant="outline" className="w-full rounded-full" asChild>
-              <Link href="/sign-in" onClick={() => setIsMobileMenuOpen(false)}>
-                Đăng nhập
-              </Link>
-            </Button>
-            <Button className="w-full rounded-full" asChild>
-              <Link href="/sign-up" onClick={() => setIsMobileMenuOpen(false)}>
-                Bắt đầu học ngay
-              </Link>
-            </Button>
-          </div></SignedOut>
+            <div className="pt-4 space-y-3">
+              <Button variant="outline" className="w-full rounded-full" asChild>
+                <Link
+                  href="/sign-in"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Đăng nhập
+                </Link>
+              </Button>
+              <Button className="w-full rounded-full" asChild>
+                <Link
+                  href="/sign-up"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Bắt đầu học ngay
+                </Link>
+              </Button>
+            </div>
+          </SignedOut>
         </div>
       )}
     </nav>

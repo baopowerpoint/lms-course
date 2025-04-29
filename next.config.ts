@@ -8,7 +8,21 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  serverExternalPackages: ['pino', 'pino-pretty']
+  serverExternalPackages: ['pino', 'pino-pretty'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+
+      },
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
+
+      },
+    ]
+  }
 };
 
 export default nextConfig;

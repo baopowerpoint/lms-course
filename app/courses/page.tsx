@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import Courses from "@/components/courses/Courses";
 import Filter from "@/components/shared/search/filter";
 import LocalSearch from "@/components/shared/search/search";
+import { Loader2 } from "lucide-react";
 
 const Page = () => {
   return (
@@ -24,9 +26,17 @@ const Page = () => {
               <LocalSearch route="/courses" placeholder="Tìm kiếm khoá học" />
             </div>
 
-            <Filter />
+            <Suspense fallback={<div className="w-full mt-2 flex"><Loader2 className="animate-spin w-5"/></div>}>
+              <Filter />
+            </Suspense>
           </div>
-          <Courses />
+          <Suspense fallback={
+            <div className="mt-10 flex justify-center items-center py-20">
+              <Loader2 className="w-10 h-10 animate-spin text-primary" />
+            </div>
+          }>
+            <Courses />
+          </Suspense>
         </div>
       </section>
     </div>

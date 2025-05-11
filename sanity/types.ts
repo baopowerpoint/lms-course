@@ -172,6 +172,7 @@ export type Lesson = {
   _updatedAt: string;
   _rev: string;
   title?: string;
+  isPreview?: boolean;
   slug?: Slug;
   description?: string;
   videoUrl?: string;

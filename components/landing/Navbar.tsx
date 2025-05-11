@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import CartIcon from "@/components/cart/CartIcon";
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
@@ -58,6 +59,7 @@ export const Navbar = () => {
         </div>
         {/* Mobile menu button */}
         <div className="flex items-center gap-2">
+          <CartIcon />
           <SignedIn>
             <UserButton />
           </SignedIn>

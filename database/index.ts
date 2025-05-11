@@ -1,3 +1,4 @@
 import User from "./user.model";
+import Order from "./order.model";
 
-export { User };
+export { User, Order };

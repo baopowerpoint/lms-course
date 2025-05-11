@@ -1,3 +1,4 @@
+import Courses from "@/components/courses/Courses";
 import Filter from "@/components/shared/search/filter";
 import LocalSearch from "@/components/shared/search/search";
 
@@ -25,6 +26,7 @@ const Page = () => {
 
             <Filter />
           </div>
+          <Courses />
         </div>
       </section>
     </div>

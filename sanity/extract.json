@@ -992,6 +992,13 @@
         },
         "optional": true
       },
+      "isPreview": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "slug": {
         "type": "objectAttribute",
         "value": {

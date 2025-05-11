@@ -2,25 +2,20 @@
 
 import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongoose";
-import { Order as OrderModel, User } from "@/database";
+import { Order as OrderModel, User, Enrollment } from "@/database";
 import { auth } from "@clerk/nextjs/server";
 import action from "../handler/action";
 import handleError from "../handler/error";
 import { CreateOrderParams } from "@/types/action";
 import { NotFoundError } from "../http-errors";
 import { parseStringify } from "../utils";
-
-export interface OrderItem {
-  courseId: string;
-  title: string;
-  price: number;
-}
+import { createEnrollmentsFromOrder } from "./enrollment.action";
 
 export interface Order {
   id: string;
   userId: string;
   clerkId: string;
-  items: OrderItem[];
+  items: string[];
   total: number;
   paymentMethod: "bank_transfer" | "momo";
   status: "pending" | "completed" | "cancelled";

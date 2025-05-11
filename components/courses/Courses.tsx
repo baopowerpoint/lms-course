@@ -3,14 +3,43 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { getCourses, Course } from "@/lib/actions/course.action";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { BookOpenCheck, Loader2 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import AddToCartButton from "@/components/cart/AddToCartButton";
+import { checkCourseAccess } from "@/lib/actions/enrollment.action";
+import { useAuth } from "@clerk/nextjs";
 
 const CourseCard = ({ course }: { course: Course }) => {
+  const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
+  const [isCheckingEnrollment, setIsCheckingEnrollment] = useState<boolean>(true);
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
+  
+  // Check if user is enrolled in this course
+  useEffect(() => {
+    const checkEnrollment = async () => {
+      if (isSignedIn) {
+        try {
+          setIsCheckingEnrollment(true);
+          const hasAccess = await checkCourseAccess(course._id);
+          setIsEnrolled(hasAccess);
+        } catch (error) {
+          console.error("Error checking course access:", error);
+        } finally {
+          setIsCheckingEnrollment(false);
+        }
+      } else {
+        setIsEnrolled(false);
+        setIsCheckingEnrollment(false);
+      }
+    };
+    
+    checkEnrollment();
+  }, [course._id, isSignedIn]);
+  
   // Generate a pastel background color based on the course title
   const generateColor = (str: string) => {
     const colors = [
@@ -115,14 +144,30 @@ const CourseCard = ({ course }: { course: Course }) => {
             </div>
           </Link>
           
-          {/* Add to Cart button - NOT wrapped in Link */}
+          {/* Add to Cart button OR Go to Course button */}
           <div onClick={(e) => e.stopPropagation()}>
-            <AddToCartButton 
-              course={course}
-              variant="outline"
-              size="sm"
-              fullWidth={true}
-            />
+            {isCheckingEnrollment ? (
+              <Button variant="outline" size="sm" className="w-full" disabled>
+                Đang kiểm tra...
+              </Button>
+            ) : isEnrolled ? (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full bg-green-50 text-green-700 hover:bg-green-100 border-green-200"
+                onClick={() => router.push(`/courses/${course._id}/learn`)}
+              >
+                <BookOpenCheck className="w-4 h-4 mr-2" />
+                Vào học ngay
+              </Button>
+            ) : (
+              <AddToCartButton 
+                course={course}
+                variant="outline"
+                size="sm"
+                fullWidth={true}
+              />
+            )}
           </div>
         </div>
       </div>

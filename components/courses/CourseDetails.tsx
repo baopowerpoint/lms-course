@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Course } from "@/lib/actions/course.action";
@@ -14,9 +14,12 @@ import {
   Play,
   User,
   Tag,
+  BookOpenCheck
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AddToCartButton from "@/components/cart/AddToCartButton";
+import { checkCourseAccess } from "@/lib/actions/enrollment.action";
+import { useAuth } from "@clerk/nextjs";
 
 interface CourseDetailsProps {
   course: Course;
@@ -26,7 +29,32 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
   const [expandedModules, setExpandedModules] = useState<
     Record<string, boolean>
   >({});
+  const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
+  const [isCheckingEnrollment, setIsCheckingEnrollment] = useState<boolean>(true);
   const router = useRouter();
+  const { isSignedIn } = useAuth();
+  
+  // Check if user is enrolled in this course
+  useEffect(() => {
+    const checkEnrollment = async () => {
+      if (isSignedIn) {
+        try {
+          setIsCheckingEnrollment(true);
+          const hasAccess = await checkCourseAccess(course._id);
+          setIsEnrolled(hasAccess);
+        } catch (error) {
+          console.error("Error checking course access:", error);
+        } finally {
+          setIsCheckingEnrollment(false);
+        }
+      } else {
+        setIsEnrolled(false);
+        setIsCheckingEnrollment(false);
+      }
+    };
+    
+    checkEnrollment();
+  }, [course._id, isSignedIn]);
 
   const handleEnrollCourse = () => {
     // This would typically check for user authentication and handle enrollment
@@ -155,16 +183,33 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
-                <AddToCartButton course={course} size="lg" className="px-8" />
+                {isCheckingEnrollment ? (
+                  <Button size="lg" className="px-8" disabled>
+                    Đang kiểm tra...
+                  </Button>
+                ) : isEnrolled ? (
+                  <Button
+                    size="lg"
+                    className="px-8 bg-green-600 hover:bg-green-700"
+                    onClick={() => router.push(`/courses/${course._id}/learn`)}
+                  >
+                    <BookOpenCheck className="w-4 h-4 mr-2" />
+                    Vào học ngay
+                  </Button>
+                ) : (
+                  <AddToCartButton course={course} size="lg" className="px-8" />
+                )}
 
-                <Button
-                  size="lg"
-                  className="px-8"
-                  onClick={handleEnrollCourse}
-                  variant="outline"
-                >
-                  {course.price > 0 ? "Xem thử bài học" : "Học miễn phí"}
-                </Button>
+                {!isEnrolled && (
+                  <Button
+                    size="lg"
+                    className="px-8"
+                    onClick={handleEnrollCourse}
+                    variant="outline"
+                  >
+                    {course.price > 0 ? "Xem thử bài học" : "Học miễn phí"}
+                  </Button>
+                )}
               </div>
             </div>
           </div>

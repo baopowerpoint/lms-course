@@ -1,9 +1,9 @@
 "use server";
 
-import { groq } from 'next-sanity';
-import { client } from '@/sanity/lib/client';
-import { urlFor } from '@/sanity/lib/image';
-import { cache } from 'react';
+import { groq } from "next-sanity";
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
+import { cache } from "react";
 
 export interface Lesson {
   _id: string;
@@ -39,11 +39,52 @@ export interface Course {
   modules?: Module[];
 }
 
-export const getCourseBySlug = cache(async (slug: string): Promise<Course | null> => {
-  if (!slug) return null;
-  
-  try {
-    const query = groq`
+export const getCourseById = cache(
+  async (id: string): Promise<Course | null> => {
+    if (!id) return null;
+
+    try {
+      const course = await client.fetch(
+        groq`*[_type == "course" && _id == $id][0]{
+        _id,
+        title,
+        slug,
+        description,
+        price,
+        image,
+        category->{name},
+        author->{name, picture},
+        modules[]->{_id, title, description, lessons[]->{_id, title, description, videoUrl, duration}}
+      }
+    `,
+        { id }
+      );
+
+      if (!course) return null;
+
+      return {
+        ...course,
+        image: course.image ? urlFor(course.image).url() : null,
+        author: {
+          ...course.author,
+          picture: course.author?.picture
+            ? urlFor(course.author.picture).url()
+            : null,
+        },
+      };
+    } catch (error) {
+      console.error("Error fetching course by ID:", error);
+      return null;
+    }
+  }
+);
+
+export const getCourseBySlug = cache(
+  async (slug: string): Promise<Course | null> => {
+    if (!slug) return null;
+
+    try {
+      const query = groq`
       *[_type == "course" && slug.current == $slug][0] {
         _id,
         title,
@@ -72,24 +113,29 @@ export const getCourseBySlug = cache(async (slug: string): Promise<Course | null
         }
       }
     `;
-    
-    const course = await client.fetch(query, { slug });
-    
-    if (!course) return null;
-    
-    return {
-      ...course,
-      image: course.image ? urlFor(course.image).url() : null,
-      author: course.author ? {
-        ...course.author,
-        image: course.author.image ? urlFor(course.author.image).url() : null
-      } : null
-    };
-  } catch (error) {
-    console.error('Error fetching course by slug:', error);
-    return null;
+
+      const course = await client.fetch(query, { slug });
+
+      if (!course) return null;
+
+      return {
+        ...course,
+        image: course.image ? urlFor(course.image).url() : null,
+        author: course.author
+          ? {
+              ...course.author,
+              image: course.author.image
+                ? urlFor(course.author.image).url()
+                : null,
+            }
+          : null,
+      };
+    } catch (error) {
+      console.error("Error fetching course by slug:", error);
+      return null;
+    }
   }
-});
+);
 
 export async function getCourses(params?: {
   query?: string;
@@ -98,23 +144,25 @@ export async function getCourses(params?: {
   limit?: number;
 }): Promise<Course[]> {
   const { query = "", category = "", page = 1, limit = 8 } = params || {};
-  
+
   // Calculate pagination
   const offset = (page - 1) * limit;
-  
+
   // Build filters
   let filters = [];
-  
+
   if (query) {
-    filters.push(`(title match "${query}" || description match "${query}")`); 
+    filters.push(`(title match "${query}" || description match "${query}")`);
   }
-  
+
   if (category) {
-    filters.push(`category._ref in *[_type=="category" && name=="${category}"]._id`);
+    filters.push(
+      `category._ref in *[_type=="category" && name=="${category}"]._id`
+    );
   }
-  
+
   const filterString = filters.length > 0 ? `&& ${filters.join(" && ")}` : "";
-  
+
   // Build the GROQ query
   const queryGroq = groq`
     *[_type == "course" ${filterString}] | order(_createdAt desc) [${offset}...${offset + limit}] {
@@ -132,20 +180,20 @@ export async function getCourses(params?: {
       tags
     }
   `;
-  
+
   try {
     const courses = await client.fetch(queryGroq);
-    
+
     return courses.map((course: any) => ({
       ...course,
       image: course.image ? urlFor(course.image).url() : null,
       author: {
         ...course.author,
-        image: course.author?.image ? urlFor(course.author.image).url() : null
-      }
+        image: course.author?.image ? urlFor(course.author.image).url() : null,
+      },
     }));
   } catch (error) {
-    console.error('Error fetching courses:', error);
+    console.error("Error fetching courses:", error);
     return [];
   }
 }

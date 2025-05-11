@@ -43,38 +43,59 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Duolingo-inspired styles */
+  --radius: 1rem;
+  --background: #fff;
+  --foreground: #4b4b4b;
+  --card: #fff;
+  --card-foreground: #4b4b4b;
+  --popover: #fff;
+  --popover-foreground: #4b4b4b;
+
+  /* Duolingo primary green */
+  --primary: #58cc02;
+  --primary-foreground: #fff;
+
+  /* Light green for secondary elements */
+  --secondary: #e5f8d3;
+  --secondary-foreground: #58cc02;
+
+  /* Neutral backgrounds */
+  --muted: #f7f7f7;
+  --muted-foreground: #777777;
+
+  /* Light blue for accent */
+  --accent: #84d8ff;
+  --accent-foreground: #1cb0f6;
+
+  /* Red for destructive actions */
+  --destructive: #ff4b4b;
+  --destructive-foreground: #fff;
+
+  /* Border and inputs */
+  --border: #e5e5e5;
+  --input: #f7f7f7;
+  --ring: #84d8ff;
+
+  /* Chart colors - colorful palette */
+  --chart-1: #58cc02; /* Green */
+  --chart-2: #1cb0f6; /* Blue */
+  --chart-3: #ffc800; /* Yellow */
+  --chart-4: #ff4b4b; /* Red */
+  --chart-5: #a560e8; /* Purple */
+
+  /* Sidebar */
+  --sidebar: #fff;
+  --sidebar-foreground: #4b4b4b;
+  --sidebar-primary: #58cc02;
+  --sidebar-primary-foreground: #fff;
+  --sidebar-accent: #e5f8d3;
+  --sidebar-accent-foreground: #58cc02;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: #84d8ff;
+
+  /* Button shadow for 3D effect */
+  --button-shadow: 0 4px 0 0 #46a302;
 }
 
 @layer base {
@@ -82,11 +103,169 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-[var(--font-quicksand)];
+    @apply bg-background text-foreground;
+    font-family: "Nunito", sans-serif;
+    font-weight: 500;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold;
   }
 }
+
 @layer components {
   .shad-no-focus {
     @apply outline-none ring-offset-transparent focus:ring-transparent focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0;
+  }
+
+  /* Tailwind CSS v4 - Sử dụng các lớp tiện ích đơn giản */
+  @layer utilities {
+    .btn-shadow {
+      box-shadow: var(--button-shadow);
+    }
+
+    .btn-shadow-active {
+      box-shadow: 0 2px 0 0 #46a302;
+      transform: translateY(2px);
+    }
+
+    .card-shadow {
+      box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .duolingo-shadow {
+      box-shadow: 0 4px 0 0 #46a302;
+    }
+
+    .hover-scale {
+      transition-property: transform;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 300ms;
+    }
+
+    .hover-scale:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  /* Card styles */
+  .duo-card {
+    background-color: var(--card);
+    border-radius: 1rem; /* rounded-2xl */
+    padding: 1.5rem; /* p-6 */
+    border: 2px solid var(--border);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition-property: box-shadow;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+
+  .duo-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Badge styles */
+  .duo-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 0.75rem; /* px-3 */
+    padding-right: 0.75rem;
+    padding-top: 0.25rem; /* py-1 */
+    padding-bottom: 0.25rem;
+    border-radius: 9999px; /* rounded-full */
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 600; /* font-semibold */
+  }
+
+  .duo-badge-success {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .duo-badge-info {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+
+  .duo-badge-warning {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background-color: var(--chart-3);
+    color: var(--foreground);
+  }
+
+  /* Interactive elements */
+  .duo-hover-effect {
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+  }
+
+  .duo-hover-effect:hover {
+    transform: scale(1.05);
+  }
+
+  /* Animations */
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+
+  .duo-anim-bounce {
+    animation: bounce 1s ease infinite;
+  }
+
+  .duo-anim-pulse {
+    animation: pulse 2s infinite;
   }
 }

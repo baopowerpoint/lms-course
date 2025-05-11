@@ -2,18 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import { createUser, tryConnect } from "@/lib/actions/user.action";
+import Image from "next/image";
 
 export const Hero = () => {
   async function testConnect() {
     await createUser({
-        clerkId: "clerkId",
-        username: 'baopowerpoint',
-        name: "powerpoi",
-        email: "baopowerpoint@gmail.com",
-        picture: ""
-    })
+      clerkId: "clerkId",
+      username: "baopowerpoint",
+      name: "powerpoi",
+      email: "baopowerpoint@gmail.com",
+      picture: "",
+    });
   }
-  
+
   return (
     <section className="py-16 md:py-24 bg-gradient-to-b from-emerald-50 to-white">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -75,35 +76,7 @@ export const Hero = () => {
           </div>
         </div>
         <div className="relative h-[400px] md:h-[500px] rounded-2xl overflow-hidden hidden md:block">
-          <div className="absolute -right-12 -bottom-12 w-80 h-80 bg-primary/20 rounded-full blur-3xl z-0"></div>
-          <div className="absolute -left-12 -top-12 w-80 h-80 bg-emerald-400/20 rounded-full blur-3xl z-0"></div>
-          <div className="relative z-10 w-full h-full flex items-center justify-center">
-            <div className="bg-white rounded-2xl shadow-xl p-8 w-[80%] h-[80%] flex flex-col items-center justify-center">
-              <div className="w-24 h-24 bg-emerald-100 rounded-full mb-6 flex items-center justify-center">
-                <span className="text-4xl">🦉</span>
-              </div>
-              <h3 className="text-xl font-bold text-center mb-4">
-                Bắt đầu hành trình học toán
-              </h3>
-              <div className="grid grid-cols-3 gap-3 w-full max-w-xs">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div
-                    key={i}
-                    className={`aspect-square rounded-lg ${
-                      i === 1 ? "bg-primary text-white" : "bg-gray-100"
-                    } flex items-center justify-center font-medium`}
-                  >
-                    {i}
-                  </div>
-                ))}
-              </div>
-              <div className="mt-6 w-full">
-                <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                  <div className="h-full w-[15%] bg-primary rounded-full"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <Image src={"/hero.svg"} alt="hero" width={500} height={500} />
         </div>
       </div>
     </section>

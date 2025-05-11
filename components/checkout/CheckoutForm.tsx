@@ -19,11 +19,17 @@ const CheckoutForm = () => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isPaymentConfirmed, setIsPaymentConfirmed] = useState(false);
 
   // Handle form submission
   const handleCheckout = async () => {
     if (!paymentMethod) {
       setError("Vui lòng chọn phương thức thanh toán");
+      return;
+    }
+    
+    if (!isPaymentConfirmed) {
+      setError("Vui lòng xác nhận đã hoàn tất thanh toán trước khi tiếp tục");
       return;
     }
 
@@ -91,6 +97,10 @@ const CheckoutForm = () => {
           <PaymentMethodSelector
             selected={paymentMethod}
             onSelect={setPaymentMethod}
+            onPaymentConfirmChange={(isConfirmed) => {
+              // Xử lý khi người dùng xác nhận đã thanh toán
+              setIsPaymentConfirmed(isConfirmed);
+            }}
           />
 
           {error && (

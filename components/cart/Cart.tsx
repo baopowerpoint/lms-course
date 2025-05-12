@@ -124,11 +124,9 @@ const Cart = ({ isOpen, onClose }: CartProps) => {
               </div>
 
               <div className="mt-6 space-y-3">
-                <Duolingo className="w-full">
-                  <Link href="/checkout" onClick={onClose}>
-                    Thanh toán
-                  </Link>
-                </Duolingo>
+                <Link href="/checkout" onClick={onClose} className="mt-2">
+                  <Duolingo className="w-full">Thanh toán</Duolingo>
+                </Link>
                 <Duolingo
                   className="w-full"
                   variant="destructive"

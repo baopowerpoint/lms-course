@@ -26,15 +26,23 @@ const Page = () => {
               <LocalSearch route="/courses" placeholder="Tìm kiếm khoá học" />
             </div>
 
-            <Suspense fallback={<div className="w-full mt-2 flex"><Loader2 className="animate-spin w-5"/></div>}>
+            <Suspense
+              fallback={
+                <div className="w-full mt-2 flex">
+                  <Loader2 className="animate-spin w-5" />
+                </div>
+              }
+            >
               <Filter />
             </Suspense>
           </div>
-          <Suspense fallback={
-            <div className="mt-10 flex justify-center items-center py-20">
-              <Loader2 className="w-10 h-10 animate-spin text-primary" />
-            </div>
-          }>
+          <Suspense
+            fallback={
+              <div className="mt-10 flex justify-center items-center py-20">
+                <Loader2 className="w-10 h-10 animate-spin text-primary" />
+              </div>
+            }
+          >
             <Courses />
           </Suspense>
         </div>

@@ -101,6 +101,7 @@ const CheckoutForm = () => {
               // Xử lý khi người dùng xác nhận đã thanh toán
               setIsPaymentConfirmed(isConfirmed);
             }}
+            order={{ total: getTotal() }}
           />
 
           {error && (

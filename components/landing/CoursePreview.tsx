@@ -30,15 +30,23 @@ const CourseCard = ({ course, colorIndex }: CourseCardProps) => {
   // For now, we'll use a placeholder progress value
   const progress = 0;
   return (
-    <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden border border-gray-100">
+    <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-primary/30 group transform hover:-translate-y-2">
       <div
         className={`h-24 ${color} flex items-center justify-center relative overflow-hidden`}
       >
         {course.image ? (
-          <Image src={course.image} alt={title} fill className="object-cover" />
+          <Image
+            src={course.image}
+            alt={title}
+            fill
+            className="object-cover transform group-hover:scale-110 transition-transform duration-500"
+          />
         ) : (
-          <span className="text-4xl">📚</span>
+          <span className="text-4xl group-hover:scale-125 transition-transform duration-300">
+            📚
+          </span>
         )}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300"></div>
       </div>
       <div className="p-6">
         <div className="flex justify-between items-center mb-3">
@@ -125,20 +133,29 @@ export const CoursePreview = () => {
         </div>
 
         {loading ? (
-          <div className="flex justify-center items-center py-20">
+          <div className="flex flex-col justify-center items-center py-20">
             <Loader2 className="w-10 h-10 animate-spin text-primary" />
+            <p className="mt-4 text-gray-500 animate-pulse">Đang tải khóa học...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {courses.map((course, index) => (
-              <CourseCard key={course._id} course={course} colorIndex={index} />
+              <div 
+                key={course._id} 
+                className={`opacity-0 animate-fadeIn animation-delay-${index} animate-fill-forwards`}
+              >
+                <CourseCard course={course} colorIndex={index} />
+              </div>
             ))}
           </div>
         )}
 
         <div className="mt-12 text-center">
           <Link href="/courses">
-            <Button variant="outline" className="rounded-full px-6">
+            <Button 
+              variant="outline" 
+              className="rounded-full px-6 transform transition-all duration-300 hover:scale-105 hover:shadow-md"
+            >
               Xem tất cả khoá học
             </Button>
           </Link>

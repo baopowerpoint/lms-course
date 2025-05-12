@@ -183,7 +183,7 @@ const Courses = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   
   const searchParams = useSearchParams();
-  const query = searchParams.get("q") || "";
+  const query = searchParams.get("query") || "";
   const category = searchParams.get("category") || "";
   
   useEffect(() => {

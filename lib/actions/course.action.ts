@@ -156,9 +156,8 @@ export async function getCourses(params?: {
   }
 
   if (category) {
-    filters.push(
-      `category._ref in *[_type=="category" && name=="${category}"]._id`
-    );
+    // Lọc trực tiếp theo ID của category
+    filters.push(`category._ref == "${category}"`);
   }
 
   const filterString = filters.length > 0 ? `&& ${filters.join(" && ")}` : "";

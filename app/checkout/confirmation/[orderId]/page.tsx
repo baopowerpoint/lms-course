@@ -123,27 +123,21 @@ const OrderConfirmationPage = () => {
                   <div className="mt-4 p-4 bg-amber-50 rounded-lg text-sm">
                     <p className="font-medium mb-2">Thông tin chuyển khoản:</p>
                     <p className="mb-1">
-                      Ngân hàng:{" "}
-                      <span className="font-medium">Vietcombank</span>
+                      Ngân hàng: <span className="font-medium">MB Bank</span>
                     </p>
                     <p className="mb-1">
                       Số tài khoản:{" "}
-                      <span className="font-medium">1234567890</span>
+                      <span className="font-medium">8269920228888</span>
                     </p>
                     <p className="mb-1">
                       Chủ tài khoản:{" "}
-                      <span className="font-medium">
-                        CÔNG TY CỔ PHẦN HAVAMATH
-                      </span>
+                      <span className="font-medium">TRAN THI THOA</span>
                     </p>
-                    <p className="mb-1">
-                      Chi nhánh:{" "}
-                      <span className="font-medium">Hồ Chí Minh</span>
-                    </p>
+
                     <p className="mb-1 text-red-600">
                       <span className="font-medium">
                         Nội dung chuyển khoản:
-                      </span>{" "}
+                      </span>
                       {order.id}
                     </p>
                   </div>

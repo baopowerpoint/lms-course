@@ -7,6 +7,11 @@ import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import CartIcon from "@/components/cart/CartIcon";
 import Duolingo from "../ui/duolingo-button";
+import CategoryDropdown from "./CategoryDropdown";
+import MobileCategoryList from "./MobileCategoryList";
+import { Suspense } from "react";
+import { Loader2, BookOpen } from "lucide-react";
+import MobileCategorySelect from "./MobileCategorySelect";
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
@@ -17,11 +22,21 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="bg-white border-b py-4 px-4 md:px-8 w-full">
+    <nav className="bg-white border-b py-3 px-3 md:py-4 md:px-8 w-full">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="flex items-center">
-          <span className="text-2xl font-bold text-primary">Havamath</span>
-        </Link>
+        <div className="flex items-center gap-3 md:gap-6">
+          <Link href="/" className="flex items-center">
+            <span className="text-xl md:text-2xl font-bold text-primary">Havamath</span>
+          </Link>
+          
+          <div className="hidden md:block">
+            <Suspense fallback={
+              <span className="text-sm font-medium text-gray-500">Đang tải...</span>
+            }>
+              <CategoryDropdown />
+            </Suspense>
+          </div>
+        </div>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-6">
@@ -58,11 +73,26 @@ export const Navbar = () => {
             Bảng giá
           </Link>
         </div>
+        {/* Mobile Categories Visible Always */}
+        <div className="md:hidden">
+          <Suspense fallback={
+            <span className="text-xs text-gray-500 flex items-center">
+              <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+              Đang tải...
+            </span>
+          }>
+            <MobileCategorySelect />
+          </Suspense>
+        </div>
+        
         {/* Mobile menu button */}
         <div className="flex items-center gap-2">
           <CartIcon />
           <SignedIn>
-            <UserButton />
+            {/* Chỉ hiển thị UserButton trên desktop */}
+            <div className="hidden md:block">
+              <UserButton />
+            </div>
           </SignedIn>
           <SignedOut>
             <div className="hidden md:flex items-center space-x-4">
@@ -110,6 +140,51 @@ export const Navbar = () => {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden px-4 pt-4 pb-6 space-y-4 bg-white">
+          {/* Danh mục khoá học được hiển thị đầu tiên và nổi bật */}
+          <div className="py-3 border-b">
+            <div className="flex items-center gap-1.5 mb-2">
+              <BookOpen className="h-4 w-4 text-primary" />
+              <span className="font-medium text-primary">Danh mục khoá học</span>
+            </div>
+            <Link
+              href="/courses"
+              className="block py-2 ml-1 text-sm font-medium hover:text-primary transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Tất cả khoá học
+            </Link>
+            <Suspense fallback={
+              <div className="pl-1 py-2 flex items-center">
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                <span className="text-gray-500">Đang tải danh mục...</span>
+              </div>
+            }>
+              <MobileCategoryList closeMenu={() => setIsMobileMenuOpen(false)} />
+            </Suspense>
+          </div>
+
+          {/* User Profile in Mobile Menu */}
+          <SignedIn>
+            <div className="py-3 border-b">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="font-medium text-primary">Tài khoản của bạn</span>
+              </div>
+              <div className="pl-1 py-2">
+                <div className="flex items-center gap-3">
+                  <UserButton />
+                  <Link
+                    href="/dashboard"
+                    className="text-sm font-medium hover:text-primary transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Xem học liệu
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </SignedIn>
+          
+          {/* Các mục menu khác */}
           <Link
             href="/#features"
             className={`block py-2 font-medium hover:text-primary ${
@@ -119,15 +194,7 @@ export const Navbar = () => {
           >
             Tính năng
           </Link>
-          <Link
-            href="/courses"
-            className={`block py-2 font-medium hover:text-primary ${
-              pathname === "/courses" ? "text-primary" : ""
-            }`}
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            Khoá học
-          </Link>
+
           <Link
             href="/#about"
             className={`block py-2 font-medium hover:text-primary ${

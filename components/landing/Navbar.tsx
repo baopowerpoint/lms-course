@@ -6,6 +6,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import CartIcon from "@/components/cart/CartIcon";
+import Duolingo from "../ui/duolingo-button";
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
@@ -68,9 +69,9 @@ export const Navbar = () => {
               <Button variant="outline" className="rounded-full" asChild>
                 <Link href="/sign-in">Đăng nhập</Link>
               </Button>
-              <Button className="rounded-full" asChild>
+              <Duolingo className="rounded-full">
                 <Link href="/sign-up">Bắt đầu học ngay</Link>
-              </Button>
+              </Duolingo>
             </div>
           </SignedOut>
 
@@ -147,22 +148,27 @@ export const Navbar = () => {
           </Link>
           <SignedOut>
             <div className="pt-4 space-y-3">
-              <Button variant="outline" className="w-full rounded-full" asChild>
+              <Button
+                variant="outline"
+                className="w-full rounded-full text-green-600   "
+                asChild
+              >
                 <Link
                   href="/sign-in"
+                  className="text-green-600"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Đăng nhập
                 </Link>
               </Button>
-              <Button className="w-full rounded-full" asChild>
+              <Duolingo className="w-full rounded-full">
                 <Link
                   href="/sign-up"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Bắt đầu học ngay
                 </Link>
-              </Button>
+              </Duolingo>
             </div>
           </SignedOut>
         </div>

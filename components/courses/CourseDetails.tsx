@@ -14,7 +14,7 @@ import {
   Play,
   User,
   Tag,
-  BookOpenCheck
+  BookOpenCheck,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AddToCartButton from "@/components/cart/AddToCartButton";
@@ -30,10 +30,11 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
     Record<string, boolean>
   >({});
   const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
-  const [isCheckingEnrollment, setIsCheckingEnrollment] = useState<boolean>(true);
+  const [isCheckingEnrollment, setIsCheckingEnrollment] =
+    useState<boolean>(true);
   const router = useRouter();
   const { isSignedIn } = useAuth();
-  
+
   // Check if user is enrolled in this course
   useEffect(() => {
     const checkEnrollment = async () => {
@@ -52,7 +53,7 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
         setIsCheckingEnrollment(false);
       }
     };
-    
+
     checkEnrollment();
   }, [course._id, isSignedIn]);
 
@@ -168,7 +169,7 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
                   <div className="flex items-center px-3 py-1.5 bg-primary/10 rounded-full">
                     <Clock className="w-4 h-4 mr-2 text-primary" />
                     <span className="text-sm font-medium">
-                      {course.modules.length} modules
+                      {course.modules.length} chương
                     </span>
                   </div>
                 )}

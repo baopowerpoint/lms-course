@@ -2,114 +2,146 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Course, getCourses } from "@/lib/actions/course.action";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Loader2 } from "lucide-react";
+import Duolingo from "../ui/duolingo-button";
 
 interface CourseCardProps {
-  title: string;
-  level: string;
-  lessons: number;
-  progress?: number;
-  color: string;
-  emoji: string;
+  course: Course;
+  colorIndex: number;
 }
 
-const CourseCard = ({ title, level, lessons, progress = 0, color, emoji }: CourseCardProps) => {
+// Array of background colors to use for courses
+const COURSE_COLORS = [
+  "bg-emerald-100",
+  "bg-blue-100",
+  "bg-purple-100",
+  "bg-orange-100",
+  "bg-pink-100",
+  "bg-indigo-100",
+];
+
+const CourseCard = ({ course, colorIndex }: CourseCardProps) => {
+  const { title, category, slug } = course;
+  const color = COURSE_COLORS[colorIndex % COURSE_COLORS.length];
+  // For now, we'll use a placeholder progress value
+  const progress = 0;
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden border border-gray-100">
-      <div className={`h-24 ${color} flex items-center justify-center`}>
-        <span className="text-4xl">{emoji}</span>
+      <div
+        className={`h-24 ${color} flex items-center justify-center relative overflow-hidden`}
+      >
+        {course.image ? (
+          <Image src={course.image} alt={title} fill className="object-cover" />
+        ) : (
+          <span className="text-4xl">📚</span>
+        )}
       </div>
       <div className="p-6">
         <div className="flex justify-between items-center mb-3">
           <h3 className="font-bold text-lg">{title}</h3>
-          <span className="text-xs font-medium py-1 px-2 bg-gray-100 rounded-full">
-            {level}
-          </span>
         </div>
-        <p className="text-sm text-gray-600 mb-4">{lessons} bài học</p>
-        
-        <div className="mb-4">
+
+        <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+          {course.description || "Khám phá khóa học này ngay bây giờ"}
+        </p>
+        {category && (
+          <span className="text-xs font-medium py-1 mb-5 px-2 bg-gray-100 rounded-full">
+            {category.name}
+          </span>
+        )}
+        <div className="mb-4 mt-5">
           <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-            <div 
+            <div
               className={cn(
                 "h-full bg-primary rounded-full",
-                progress === 0 ? "w-0" : progress <= 25 ? "w-1/4" : 
-                progress <= 50 ? "w-1/2" : progress <= 75 ? "w-3/4" : "w-full"
+                progress === 0
+                  ? "w-0"
+                  : progress <= 25
+                    ? "w-1/4"
+                    : progress <= 50
+                      ? "w-1/2"
+                      : progress <= 75
+                        ? "w-3/4"
+                        : "w-full"
               )}
             ></div>
           </div>
           <div className="flex justify-between mt-1">
-            <span className="text-xs text-gray-500">{progress}% hoàn thành</span>
+            <span className="text-xs text-gray-500">
+              {progress}% hoàn thành
+            </span>
             {progress > 0 && (
               <span className="text-xs font-medium text-primary">Tiếp tục</span>
             )}
           </div>
         </div>
-        
-        <Button className="w-full rounded-lg">
-          {progress > 0 ? "Tiếp tục học" : "Bắt đầu học"}
-        </Button>
+
+        <Link href={`/courses/${slug}`} className="block w-full">
+          <Duolingo className="w-full rounded-lg">
+            {progress > 0 ? "Tiếp tục học" : "Xem chi tiết"}
+          </Duolingo>
+        </Link>
       </div>
     </div>
   );
 };
 
 export const CoursePreview = () => {
-  const courses: CourseCardProps[] = [
-    {
-      title: "Đại số cơ bản",
-      level: "Sơ cấp",
-      lessons: 42,
-      progress: 65,
-      color: "bg-emerald-100",
-      emoji: "🧮"
-    },
-    {
-      title: "Hình học phẳng",
-      level: "Sơ cấp",
-      lessons: 36,
-      progress: 25,
-      color: "bg-blue-100",
-      emoji: "📐"
-    },
-    {
-      title: "Số học và Tỉ lệ",
-      level: "Sơ cấp",
-      lessons: 28,
-      progress: 0,
-      color: "bg-purple-100",
-      emoji: "🔢"
-    },
-    {
-      title: "Giải tích cơ bản",
-      level: "Trung cấp",
-      lessons: 45,
-      progress: 0,
-      color: "bg-orange-100",
-      emoji: "📊"
-    }
-  ];
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeaturedCourses = async () => {
+      try {
+        const data = await getCourses({
+          limit: 4, // Get the first 4 courses for the preview section
+        });
+        setCourses(data);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedCourses();
+  }, []);
 
   return (
     <section id="courses" className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Khoá học nổi bật</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Khoá học nổi bật
+          </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Khám phá các khoá học toán đa dạng từ cơ bản đến nâng cao,
-            được thiết kế với phương pháp học tập hiệu quả
+            Khám phá các khoá học đa dạng từ cơ bản đến nâng cao, được thiết kế
+            với phương pháp học tập hiệu quả
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {courses.map((course, index) => (
-            <CourseCard key={index} {...course} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="w-10 h-10 animate-spin text-primary" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {courses.map((course, index) => (
+              <CourseCard key={course._id} course={course} colorIndex={index} />
+            ))}
+          </div>
+        )}
 
         <div className="mt-12 text-center">
-          <Button variant="outline" className="rounded-full px-6">
-            Xem tất cả khoá học
-          </Button>
+          <Link href="/courses">
+            <Button variant="outline" className="rounded-full px-6">
+              Xem tất cả khoá học
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

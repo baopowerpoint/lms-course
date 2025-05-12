@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { createUser, tryConnect } from "@/lib/actions/user.action";
 import Image from "next/image";
+import Duolingo from "@/components/ui/duolingo-button";
 
 export const Hero = () => {
   async function testConnect() {
@@ -28,20 +28,7 @@ export const Hero = () => {
             nhân hoá, giúp bạn tiến bộ mỗi ngày chỉ với 15 phút.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button
-              onClick={testConnect}
-              size="lg"
-              className="rounded-full text-lg font-medium px-8 py-6 h-auto"
-            >
-              Bắt đầu miễn phí
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="rounded-full text-lg font-medium px-8 py-6 h-auto"
-            >
-              Xem demo
-            </Button>
+            <Duolingo onClick={testConnect}>BẮT ĐẦU MIỄN PHÍ</Duolingo>
           </div>
           <div className="mt-10 flex items-center space-x-6">
             <div className="flex -space-x-2">

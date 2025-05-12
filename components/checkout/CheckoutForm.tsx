@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { useCartContext } from "@/hooks/CartProvider";
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
@@ -8,6 +7,7 @@ import CartSummary from "./CartSummary";
 import { useRouter } from "next/navigation";
 import { createOrder } from "@/lib/actions/order.action";
 import PaymentMethodSelector from "./PaymentMethodSelector";
+import Duolingo from "@/components/ui/duolingo-button";
 
 type PaymentMethod = "bank_transfer" | "momo" | null;
 
@@ -109,14 +109,13 @@ const CheckoutForm = () => {
             </div>
           )}
 
-          <Button
-            className="w-full mt-6"
-            size="lg"
+          <Duolingo
+            className="w-full mt-6 py-4 text-base"
             onClick={handleCheckout}
             disabled={isSubmitting || !paymentMethod}
           >
-            {isSubmitting ? "Đang xử lý..." : "Hoàn tất đơn hàng"}
-          </Button>
+            {isSubmitting ? "ĐANG XỬ LÝ..." : "HOÀN TẤT ĐƠN HÀNG"}
+          </Duolingo>
         </div>
       </div>
 

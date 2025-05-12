@@ -7,6 +7,7 @@ import { X, ShoppingCart, Trash2 } from "lucide-react";
 import { useCartContext } from "@/hooks/CartProvider";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import Duolingo from "../ui/duolingo-button";
 
 interface CartProps {
   isOpen: boolean;
@@ -14,18 +15,19 @@ interface CartProps {
 }
 
 const Cart = ({ isOpen, onClose }: CartProps) => {
-  const { cart, removeFromCart, clearCart, getTotal, getItemsCount } = useCartContext();
+  const { cart, removeFromCart, clearCart, getTotal, getItemsCount } =
+    useCartContext();
 
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/40 transition-opacity" 
+      <div
+        className="fixed inset-0 bg-black/40 transition-opacity"
         onClick={onClose}
       />
-      
+
       {/* Cart panel */}
       <div className="fixed right-0 top-0 h-full w-full max-w-md overflow-y-auto bg-white p-6 shadow-xl sm:w-[400px]">
         <div className="flex items-center justify-between pb-4 border-b">
@@ -33,7 +35,7 @@ const Cart = ({ isOpen, onClose }: CartProps) => {
             <ShoppingCart className="w-5 h-5 mr-2" />
             Giỏ hàng ({getItemsCount()})
           </h2>
-          <button 
+          <button
             onClick={onClose}
             className="p-2 rounded-full hover:bg-gray-100"
             aria-label="Đóng giỏ hàng"
@@ -42,17 +44,15 @@ const Cart = ({ isOpen, onClose }: CartProps) => {
             <X className="w-5 h-5" />
           </button>
         </div>
-        
+
         {cart.length === 0 ? (
           <div className="py-12 text-center flex flex-col items-center">
             <ShoppingCart className="w-16 h-16 text-gray-300 mb-4" />
             <p className="text-lg font-medium mb-2">Giỏ hàng trống</p>
-            <p className="text-gray-500 mb-6">Thêm khóa học vào giỏ hàng để tiến hành thanh toán.</p>
-            <Button 
-              variant="outline" 
-              onClick={onClose}
-              className="px-6"
-            >
+            <p className="text-gray-500 mb-6">
+              Thêm khóa học vào giỏ hàng để tiến hành thanh toán.
+            </p>
+            <Button variant="outline" onClick={onClose} className="px-6">
               Tiếp tục mua sắm
             </Button>
           </div>
@@ -63,8 +63,8 @@ const Cart = ({ isOpen, onClose }: CartProps) => {
                 <div key={item._id} className="flex gap-4 py-4 border-b">
                   <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
                     {item.image ? (
-                      <Image 
-                        src={item.image} 
+                      <Image
+                        src={item.image}
                         alt={item.title}
                         width={80}
                         height={80}
@@ -76,7 +76,7 @@ const Cart = ({ isOpen, onClose }: CartProps) => {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="flex flex-1 flex-col">
                     <div className="flex justify-between">
                       <h3 className="text-sm font-medium line-clamp-2">
@@ -92,13 +92,13 @@ const Cart = ({ isOpen, onClose }: CartProps) => {
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
-                    
+
                     {item.category && (
                       <p className="mt-1 text-xs text-gray-500">
                         {item.category.name}
                       </p>
                     )}
-                    
+
                     <div className="mt-auto pt-2">
                       <p className="text-sm font-medium text-primary">
                         {item.price ? formatPrice(item.price) : "Miễn phí"}
@@ -108,7 +108,7 @@ const Cart = ({ isOpen, onClose }: CartProps) => {
                 </div>
               ))}
             </div>
-            
+
             <div className="border-t pt-4 mt-6">
               <div className="flex justify-between py-2">
                 <p className="text-sm text-gray-600">Tạm tính</p>
@@ -122,25 +122,20 @@ const Cart = ({ isOpen, onClose }: CartProps) => {
                 <p>Tổng cộng</p>
                 <p>{formatPrice(getTotal())}</p>
               </div>
-              
+
               <div className="mt-6 space-y-3">
-                <Button 
-                  className="w-full" 
-                  size="lg"
-                  asChild
-                >
+                <Duolingo className="w-full">
                   <Link href="/checkout" onClick={onClose}>
                     Thanh toán
                   </Link>
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full" 
-                  size="lg"
+                </Duolingo>
+                <Duolingo
+                  className="w-full"
+                  variant="destructive"
                   onClick={clearCart}
                 >
                   Xóa giỏ hàng
-                </Button>
+                </Duolingo>
               </div>
             </div>
           </>

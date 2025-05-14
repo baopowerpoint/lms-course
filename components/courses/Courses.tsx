@@ -8,39 +8,24 @@ import { getCourses, Course } from "@/lib/actions/course.action";
 import { Button } from "@/components/ui/button";
 import { BookOpenCheck, Loader2 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
-import { checkUserPayment, checkCourseAccess } from "@/lib/actions/payment.actions";
+import { checkCourseAccess } from "@/lib/actions/payment.actions";
 import { useAuth } from "@clerk/nextjs";
 import { toast } from "sonner";
+import Duolingo from "../ui/duolingo-button";
 
 // EnrollCourseButton component for direct enrollment without shopping cart
-const EnrollCourseButton = ({ course }: { course: Course }) => {
+const EnrollCourseButton = ({
+  course,
+  hasAccess,
+  isCheckingAccess,
+}: {
+  course: Course;
+  hasAccess: boolean;
+  isCheckingAccess: boolean;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [hasPaid, setHasPaid] = useState(false);
-  const [isCheckingPayment, setIsCheckingPayment] = useState(true);
   const { isSignedIn } = useAuth();
   const router = useRouter();
-
-  // Check user's payment status
-  useEffect(() => {
-    const checkPaymentStatus = async () => {
-      if (isSignedIn) {
-        try {
-          setIsCheckingPayment(true);
-          const result = await checkUserPayment();
-          setHasPaid(result.success && result.data?.hasPaid);
-        } catch (error) {
-          console.error("Error checking payment status:", error);
-        } finally {
-          setIsCheckingPayment(false);
-        }
-      } else {
-        setHasPaid(false);
-        setIsCheckingPayment(false);
-      }
-    };
-
-    checkPaymentStatus();
-  }, [isSignedIn]);
 
   const handleEnroll = async () => {
     if (!isSignedIn) {
@@ -48,33 +33,26 @@ const EnrollCourseButton = ({ course }: { course: Course }) => {
       return;
     }
 
-    if (!hasPaid) {
+    if (!hasAccess) {
       // If user hasn't paid, redirect to subscription page
       router.push("/subscription");
       return;
     }
 
-    // Kiểm tra quyền truy cập vào khóa học
     try {
       setIsLoading(true);
-      // Kiểm tra xem người dùng có bất kỳ thanh toán hoàn thành nào không
-      const accessResult = await checkCourseAccess();
-      
-      if (accessResult.success && accessResult.hasAccess) {
-        toast.success("Bạn có quyền truy cập vào khóa học này!");
-        router.push(`/courses/${course.slug}/learn`);
-      } else {
-        toast.error("Vui lòng thanh toán để truy cập khóa học.");
-      }
+      // User already has access, just navigate to the course
+      toast.success("Bạn có quyền truy cập vào khóa học này!");
+      router.push(`/courses/${course.slug}/learn`);
     } catch (error) {
-      toast.error("Đã xảy ra lỗi khi kiểm tra quyền truy cập.");
-      console.error("Error checking course access:", error);
+      toast.error("Đã xảy ra lỗi khi truy cập khóa học.");
+      console.error("Error accessing course:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (isCheckingPayment) {
+  if (isCheckingAccess) {
     return (
       <Button variant="outline" size="sm" className="w-full" disabled>
         Đang kiểm tra...
@@ -82,11 +60,11 @@ const EnrollCourseButton = ({ course }: { course: Course }) => {
     );
   }
 
-  if (hasPaid) {
+  if (hasAccess) {
     return (
-      <Button 
-        onClick={handleEnroll} 
-        size="sm" 
+      <Button
+        onClick={handleEnroll}
+        size="sm"
         className="w-full bg-blue-600 hover:bg-blue-700 text-white"
         disabled={isLoading}
       >
@@ -100,48 +78,37 @@ const EnrollCourseButton = ({ course }: { course: Course }) => {
         )}
       </Button>
     );
+  } else {
+    return (
+      <Button
+        onClick={handleEnroll}
+        size="sm"
+        className="w-full"
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            Đang đăng ký...
+          </>
+        ) : (
+          <>Đăng ký ngay</>
+        )}
+      </Button>
+    );
   }
-
-  return (
-    <Button 
-      onClick={handleEnroll} 
-      variant="outline" 
-      size="sm" 
-      className="w-full"
-    >
-      Thanh toán để học
-    </Button>
-  );
 };
 
-const CourseCard = ({ course }: { course: Course }) => {
-  const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
-  const [isCheckingEnrollment, setIsCheckingEnrollment] =
-    useState<boolean>(true);
-  const { isSignedIn } = useAuth();
+const CourseCard = ({
+  course,
+  hasAccess,
+  isCheckingAccess,
+}: {
+  course: Course;
+  hasAccess: boolean;
+  isCheckingAccess: boolean;
+}) => {
   const router = useRouter();
-
-  // Kiểm tra đơn giản - chỉ xem user đã có payment thành công chưa
-  useEffect(() => {
-    const checkPayment = async () => {
-      if (isSignedIn) {
-        try {
-          setIsCheckingEnrollment(true);
-          const result = await checkCourseAccess();
-          setIsEnrolled(result.hasAccess);
-        } catch (error) {
-          console.error("Error checking payment:", error);
-        } finally {
-          setIsCheckingEnrollment(false);
-        }
-      } else {
-        setIsEnrolled(false);
-        setIsCheckingEnrollment(false);
-      }
-    };
-
-    checkPayment();
-  }, [isSignedIn]);
 
   // Generate a pastel background color based on the course title
   const generateColor = (str: string) => {
@@ -264,26 +231,30 @@ const CourseCard = ({ course }: { course: Course }) => {
 
           {/* Add to Cart button OR Go to Course button */}
           <div onClick={(e) => e.stopPropagation()}>
-            {isCheckingEnrollment ? (
-              <Button variant="outline" size="sm" className="w-full" disabled>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Đang kiểm tra...
-              </Button>
-            ) : isEnrolled ? (
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full bg-green-50 text-green-700 hover:bg-green-100 border-green-200"
-                onClick={() => {
-                  // Chuyển hướng trực tiếp đến trang học
-                  router.push(`/courses/${course.slug}/learn`);
-                }}
-              >
-                <BookOpenCheck className="w-4 h-4 mr-2" />
-                Vào học ngay
-              </Button>
+            {isCheckingAccess ? (
+              <div variant="outline" size="sm" className="w-full" disabled>
+                <div className="flex justify-between mt-1">
+                  <p className="font-bold text-xl">
+                    {formatPrice(course.price)}
+                  </p>
+                  <Button variant="outline" size="sm" disabled className="w-20">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  </Button>
+                </div>
+              </div>
+            ) : hasAccess ? (
+              <Link href={`/courses/${course.slug}/learn`}>
+                <Duolingo className="mt-0 bg-blue-700 hover:bg-blue-600 text-white flex items-center gap-1">
+                  <BookOpenCheck className="w-3.5 h-3.5 mr-1" />
+                  Vào học ngay
+                </Duolingo>
+              </Link>
             ) : (
-              <EnrollCourseButton course={course} />
+              <EnrollCourseButton
+                course={course}
+                hasAccess={hasAccess}
+                isCheckingAccess={isCheckingAccess}
+              />
             )}
           </div>
         </div>
@@ -295,28 +266,44 @@ const CourseCard = ({ course }: { course: Course }) => {
 const Courses = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-
+  const [hasAccess, setHasAccess] = useState<boolean>(false);
+  const [isCheckingAccess, setIsCheckingAccess] = useState<boolean>(true);
+  const { isSignedIn } = useAuth();
   const searchParams = useSearchParams();
-  const query = searchParams.get("query") || "";
-  const category = searchParams.get("category") || "";
+
+  // Single course access check for all courses
+  useEffect(() => {
+    const checkAccessStatus = async () => {
+      if (isSignedIn) {
+        try {
+          setIsCheckingAccess(true);
+          // Make a single API call to check access instead of one per course
+          const result = await checkCourseAccess();
+          setHasAccess(result.hasAccess);
+        } catch (error) {
+          console.error("Error checking course access status:", error);
+        } finally {
+          setIsCheckingAccess(false);
+        }
+      } else {
+        setHasAccess(false);
+        setIsCheckingAccess(false);
+      }
+    };
+
+    checkAccessStatus();
+  }, [isSignedIn]);
 
   useEffect(() => {
     const fetchCourses = async () => {
-      setLoading(true);
       try {
-        const data = await getCourses({
-          query,
-          category,
-          page: 1,
-          limit: 8,
-        });
+        setLoading(true);
+        // Extract query params
+        const query = searchParams.get("q") || undefined;
+        const category = searchParams.get("category") || undefined;
 
-        setCourses(data);
-        setHasMore(data.length === 8);
-        setPage(1);
+        const coursesData = await getCourses({ query, category });
+        setCourses(coursesData);
       } catch (error) {
         console.error("Error fetching courses:", error);
       } finally {
@@ -325,38 +312,11 @@ const Courses = () => {
     };
 
     fetchCourses();
-  }, [query, category]);
-
-  const handleLoadMore = async () => {
-    if (loadingMore) return;
-
-    setLoadingMore(true);
-    try {
-      const nextPage = page + 1;
-      const data = await getCourses({
-        query,
-        category,
-        page: nextPage,
-        limit: 8,
-      });
-
-      if (data.length > 0) {
-        setCourses((prev) => [...prev, ...data]);
-        setPage(nextPage);
-        setHasMore(data.length === 8);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error("Error loading more courses:", error);
-    } finally {
-      setLoadingMore(false);
-    }
-  };
+  }, [searchParams]);
 
   if (loading) {
     return (
-      <div className="mt-10 flex justify-center items-center py-20">
+      <div className="w-full flex justify-center py-10">
         <Loader2 className="w-10 h-10 animate-spin text-primary" />
       </div>
     );
@@ -364,57 +324,24 @@ const Courses = () => {
 
   if (courses.length === 0) {
     return (
-      <div className="mt-10 py-20 text-center">
-        <div className="text-4xl mb-4">🔍</div>
-        <h3 className="text-xl font-semibold mb-2">
-          Không tìm thấy khóa học nào
-        </h3>
-        <p className="text-gray-600 mb-6">
-          Vui lòng thử với từ khóa khác hoặc xem tất cả khóa học của chúng tôi
-        </p>
-        <Button
-          variant="outline"
-          onClick={() => {
-            const url = new URL(window.location.href);
-            url.searchParams.delete("q");
-            url.searchParams.delete("category");
-            window.location.href = url.toString();
-          }}
-        >
-          Xem tất cả khóa học
-        </Button>
+      <div className="w-full flex justify-center py-10">
+        <p className="text-muted-foreground">Không tìm thấy khóa học nào.</p>
       </div>
     );
   }
 
   return (
     <div className="mt-10">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-10">
         {courses.map((course) => (
-          <CourseCard key={course._id} course={course} />
+          <CourseCard
+            key={course._id}
+            course={course}
+            hasAccess={hasAccess}
+            isCheckingAccess={isCheckingAccess}
+          />
         ))}
       </div>
-
-      {hasMore && (
-        <div className="mt-10 flex justify-center">
-          <Button
-            variant="outline"
-            size="lg"
-            onClick={handleLoadMore}
-            disabled={loadingMore}
-            className="min-w-[200px]"
-          >
-            {loadingMore ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Đang tải...
-              </>
-            ) : (
-              "Xem thêm khóa học"
-            )}
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

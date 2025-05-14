@@ -161,7 +161,7 @@ export async function getUserPayments() {
 }
 
 // Kiểm tra người dùng có quyền truy cập vào khóa học hay không
-// (Đã đơn giản hóa - chỉ kiểm tra xem người dùng đã có payment thành công chưa)
+// Kiểm tra cả payment thông thường và payment từ mã kích hoạt (redemption code)
 export async function checkCourseAccess() {
   try {
     await dbConnect();
@@ -178,10 +178,15 @@ export async function checkCourseAccess() {
       return { success: false, hasAccess: false };
     }
 
-    // Kiểm tra đơn giản - người dùng có bất kỳ thanh toán nào đã hoàn thành chưa
+    // Kiểm tra người dùng có thanh toán thành công hoặc đã kích hoạt mã từ phong bì
     const payment = await Payment.findOne({
       user: user._id,
-      status: "completed"
+      status: "completed",
+      $or: [
+        { method: "bank_transfer" },
+        { method: "momo" },
+        { method: "physical_code" }
+      ]
     });
 
     return { success: true, hasAccess: !!payment };

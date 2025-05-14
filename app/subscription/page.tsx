@@ -7,16 +7,16 @@ import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Đăng ký học | TECHSCHOOL",
+  title: "Đăng ký học | Havamath",
   description: "Đăng ký gói truy cập vào tất cả các khóa học",
 };
 
-const SUBSCRIPTION_PRICE = 1200000; // 1,200,000 VNĐ
+const SUBSCRIPTION_PRICE = 899000; // 899,000 VNĐ
 
 export default async function SubscriptionPage() {
   // Kiểm tra người dùng đã thanh toán chưa
   const paymentResult = await checkUserPayment();
-  
+
   // Nếu đã thanh toán thành công, hiển thị thông báo và liên kết đến khóa học
   if (paymentResult.success && paymentResult.data?.hasPaid) {
     return (
@@ -25,12 +25,15 @@ export default async function SubscriptionPage() {
           <div className="mx-auto w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
             <CheckCircle2 className="h-6 w-6 text-green-600" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Bạn đã đăng ký thành công!</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Bạn đã đăng ký thành công!
+          </h1>
           <p className="text-gray-600 mt-2">
-            Bạn đã thanh toán {formatPrice(paymentResult.data.amount)} và có thể truy cập tất cả các khóa học.
+            Bạn đã thanh toán {formatPrice(paymentResult.data.amount)} và có thể
+            truy cập tất cả các khóa học.
           </p>
         </div>
-        
+
         <div className="mt-8 border-t pt-8">
           <h2 className="text-lg font-semibold mb-4">Quyền lợi của bạn</h2>
           <ul className="space-y-3">
@@ -50,7 +53,7 @@ export default async function SubscriptionPage() {
         </div>
 
         <div className="flex justify-center mt-8">
-          <Link 
+          <Link
             href="/dashboard/courses"
             className="px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
           >
@@ -64,21 +67,26 @@ export default async function SubscriptionPage() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-3">Đăng ký học tại TECHSCHOOL</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-3">
+          Đăng ký học tại Havamath
+        </h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Một lần thanh toán, truy cập toàn bộ khóa học. Không có phí ẩn, không có phí định kỳ.
+          Một lần thanh toán, truy cập toàn bộ khóa học. Không có phí ẩn, không
+          có phí định kỳ.
         </p>
       </div>
-      
+
       <div className="grid md:grid-cols-2 gap-8 mt-12">
         <div>
           <div className="bg-white p-8 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-6">Gói truy cập đầy đủ</h2>
             <div className="mb-4">
-              <span className="text-4xl font-bold">{formatPrice(SUBSCRIPTION_PRICE)}</span>
+              <span className="text-4xl font-bold">
+                {formatPrice(SUBSCRIPTION_PRICE)}
+              </span>
               <span className="text-gray-500 ml-2">một lần duy nhất</span>
             </div>
-            
+
             <div className="border-t border-b py-4 my-6">
               <ul className="space-y-3">
                 <li className="flex items-center text-gray-700">
@@ -105,7 +113,7 @@ export default async function SubscriptionPage() {
             </div>
           </div>
         </div>
-        
+
         <div>
           <SubscriptionForm price={SUBSCRIPTION_PRICE} />
         </div>

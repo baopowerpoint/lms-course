@@ -7,11 +7,13 @@ import {
   PiggyBankIcon,
   Sparkles,
   Star,
+  KeyIcon,
+  ArrowRight
 } from "lucide-react";
 import { Wallet } from "lucide-react";
 import React, { useState } from "react";
 
-type PaymentMethod = "bank_transfer" | "momo" | null;
+type PaymentMethod = "bank_transfer" | "momo" | "physical_code" | null;
 
 interface OrderInfo {
   total: number;
@@ -67,6 +69,81 @@ const PaymentMethodSelector = ({
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Physical Code Option */}
+      <div
+        className={`rounded-2xl p-5 cursor-pointer transition-transform hover:scale-105 ${
+          selected === "physical_code"
+            ? "bg-chart-3/10 border-2 border-chart-3 shadow-md"
+            : "border-2 border-border hover:border-chart-3/50 bg-white"
+        }`}
+        onClick={() => onSelect("physical_code")}
+      >
+        <div className="flex items-center gap-4">
+          <div
+            className={`w-6 h-6 rounded-full flex items-center justify-center ${
+              selected === "physical_code"
+                ? "bg-chart-3 text-white"
+                : "border-2 border-gray-300"
+            }`}
+          >
+            {selected === "physical_code" && (
+              <CheckCircle2 className="w-4 h-4" />
+            )}
+          </div>
+
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="bg-chart-3/20 p-2 rounded-full">
+              <KeyIcon className="w-6 h-6 text-chart-3" />
+            </div>
+            <div>
+              <span className="font-bold text-lg block">
+                Mã kích hoạt (Phong bì)
+              </span>
+              <span className="text-sm text-muted-foreground">
+                Nhập mã 10 ký tự từ phong bì bạn đã mua
+              </span>
+            </div>
+            <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-semibold bg-chart-3 text-white ml-auto">
+              Mới
+            </span>
+          </div>
+        </div>
+
+        {selected === "physical_code" && (
+          <div className="mt-6 pl-4 sm:pl-10 space-y-6">
+            <div className="bg-white p-5 rounded-lg border border-chart-3/30 shadow-sm">
+              <h3 className="font-semibold text-xl mb-4 text-chart-3 flex items-center gap-2">
+                <KeyIcon className="h-5 w-5" />
+                Hướng dẫn sử dụng mã kích hoạt
+              </h3>
+              
+              <div className="space-y-4">
+                <p className="text-muted-foreground">
+                  Nếu bạn đã mua phong bì chứa mã kích hoạt 10 ký tự, bạn có thể dùng nó để mở khóa tất cả các khóa học.
+                </p>
+                
+                <div className="bg-chart-3/10 p-4 rounded-lg">
+                  <h4 className="font-medium mb-2 text-chart-3">Quy trình kích hoạt:</h4>
+                  <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
+                    <li>Mở phong bì và lấy mã 10 ký tự</li>
+                    <li>Nhấn nút "Kích hoạt mã" bên dưới</li>
+                    <li>Nhập mã và hoàn tất quá trình kích hoạt</li>
+                    <li>Sau khi kích hoạt thành công, bạn sẽ có quyền truy cập vào tất cả khóa học</li>
+                  </ol>
+                </div>
+                
+                <div className="flex justify-center">
+                  <a href="/subscription/redeem" className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-chart-3 text-white hover:bg-chart-3/90 transition-colors">
+                    <span>Kích hoạt mã của bạn</span>
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Bank Transfer Option */}

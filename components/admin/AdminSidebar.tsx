@@ -8,7 +8,8 @@ import {
   ShoppingCart, 
   BookOpen, 
   LogOut,
-  CreditCard
+  CreditCard,
+  KeyIcon
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
 
@@ -40,6 +41,11 @@ const AdminSidebar = () => {
       icon: BookOpen,
       label: "Quản lý khóa học",
       href: "/admin/courses",
+    },
+    {
+      icon: KeyIcon,
+      label: "Quản lý mã kích hoạt",
+      href: "/admin/codes",
     },
   ];
 

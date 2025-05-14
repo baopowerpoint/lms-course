@@ -21,6 +21,13 @@ export function formatPrice(price: number): string {
     maximumFractionDigits: 0,
   }).format(price);
 }
+export function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+}
 export const parseStringify = (value: unknown) =>
   JSON.parse(JSON.stringify(value));
 export const formUrlQuery = ({ params, key, value }: UrlQueryParams) => {

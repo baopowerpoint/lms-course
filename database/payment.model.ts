@@ -4,7 +4,7 @@ export interface IPayment {
   user: Types.ObjectId;
   amount: number;
   status: "pending" | "completed" | "failed";
-  method: "bank_transfer" | "momo";
+  method: "bank_transfer" | "momo" | "physical_code";
   transactionId?: string;
   notes?: string;
   // Thời gian hết hạn (nếu muốn triển khai subscription dạng định kỳ sau này)
@@ -25,7 +25,7 @@ const PaymentSchema = new Schema<IPayment>(
     },
     method: {
       type: String,
-      enum: ["bank_transfer", "momo"],
+      enum: ["bank_transfer", "momo", "physical_code"],
       required: true,
     },
     transactionId: { type: String },

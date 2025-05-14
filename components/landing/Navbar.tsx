@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import CartIcon from "@/components/cart/CartIcon";
 import Duolingo from "../ui/duolingo-button";
 import CategoryDropdown from "./CategoryDropdown";
 import MobileCategoryList from "./MobileCategoryList";
@@ -26,13 +25,19 @@ export const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center gap-3 md:gap-6">
           <Link href="/" className="flex items-center">
-            <span className="text-xl md:text-2xl font-bold text-primary">Havamath</span>
+            <span className="text-xl md:text-2xl font-bold text-primary">
+              Havamath
+            </span>
           </Link>
-          
+
           <div className="hidden md:block">
-            <Suspense fallback={
-              <span className="text-sm font-medium text-gray-500">Đang tải...</span>
-            }>
+            <Suspense
+              fallback={
+                <span className="text-sm font-medium text-gray-500">
+                  Đang tải...
+                </span>
+              }
+            >
               <CategoryDropdown />
             </Suspense>
           </div>
@@ -75,19 +80,20 @@ export const Navbar = () => {
         </div>
         {/* Mobile Categories Visible Always */}
         <div className="md:hidden">
-          <Suspense fallback={
-            <span className="text-xs text-gray-500 flex items-center">
-              <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-              Đang tải...
-            </span>
-          }>
+          <Suspense
+            fallback={
+              <span className="text-xs text-gray-500 flex items-center">
+                <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                Đang tải...
+              </span>
+            }
+          >
             <MobileCategorySelect />
           </Suspense>
         </div>
-        
+
         {/* Mobile menu button */}
         <div className="flex items-center gap-2">
-          <CartIcon />
           <SignedIn>
             {/* Chỉ hiển thị UserButton trên desktop */}
             <div className="hidden md:block">
@@ -144,7 +150,9 @@ export const Navbar = () => {
           <div className="py-3 border-b">
             <div className="flex items-center gap-1.5 mb-2">
               <BookOpen className="h-4 w-4 text-primary" />
-              <span className="font-medium text-primary">Danh mục khoá học</span>
+              <span className="font-medium text-primary">
+                Danh mục khoá học
+              </span>
             </div>
             <Link
               href="/courses"
@@ -153,13 +161,17 @@ export const Navbar = () => {
             >
               Tất cả khoá học
             </Link>
-            <Suspense fallback={
-              <div className="pl-1 py-2 flex items-center">
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                <span className="text-gray-500">Đang tải danh mục...</span>
-              </div>
-            }>
-              <MobileCategoryList closeMenu={() => setIsMobileMenuOpen(false)} />
+            <Suspense
+              fallback={
+                <div className="pl-1 py-2 flex items-center">
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <span className="text-gray-500">Đang tải danh mục...</span>
+                </div>
+              }
+            >
+              <MobileCategoryList
+                closeMenu={() => setIsMobileMenuOpen(false)}
+              />
             </Suspense>
           </div>
 
@@ -167,7 +179,9 @@ export const Navbar = () => {
           <SignedIn>
             <div className="py-3 border-b">
               <div className="flex items-center gap-2 mb-2">
-                <span className="font-medium text-primary">Tài khoản của bạn</span>
+                <span className="font-medium text-primary">
+                  Tài khoản của bạn
+                </span>
               </div>
               <div className="pl-1 py-2">
                 <div className="flex items-center gap-3">
@@ -183,7 +197,7 @@ export const Navbar = () => {
               </div>
             </div>
           </SignedIn>
-          
+
           {/* Các mục menu khác */}
           <Link
             href="/#features"

@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
-import { CheckCircle, XCircle } from "lucide-react";
+import { XCircle } from "lucide-react";
 import { useState } from "react";
-import { completeOrderAndEnrollUser } from "@/lib/actions/enrollment.action";
 import { updateOrderStatus } from "@/lib/actions/order.action";
 import { formatDistance } from "date-fns";
 import { vi } from "date-fns/locale";
 import { toast } from "sonner";
+import AdminOrderConfirmation from "./AdminOrderConfirmation";
 
 interface OrderItem {
   _id: string;
@@ -41,34 +41,29 @@ interface AdminOrdersTableProps {
 export default function AdminOrdersTable({ orders }: AdminOrdersTableProps) {
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
 
-  // Function to handle order status change
-  const handleStatusChange = async (
-    orderId: string,
-    newStatus: "completed" | "cancelled"
-  ) => {
+  // Function to handle order cancellation
+  const handleCancelOrder = async (orderId: string) => {
     try {
       setIsUpdating(orderId);
-
-      if (newStatus === "completed") {
-        // If completing order, also enroll the user in the courses
-        await completeOrderAndEnrollUser(orderId);
-        toast.success(
-          "Đơn hàng đã được xác nhận và người dùng đã được đăng ký vào khóa học"
-        );
-      } else {
-        // Just update the status for cancelled orders
-        await updateOrderStatus(orderId, newStatus);
-        toast.success("Đơn hàng đã bị hủy");
-      }
-
+      
+      // Update the status to cancelled
+      await updateOrderStatus(orderId, "cancelled");
+      toast.success("Đơn hàng đã bị hủy");
+      
       // Refresh the page to show updated status
       window.location.reload();
     } catch (error) {
-      console.error("Error updating order status:", error);
-      toast.error("Có lỗi xảy ra khi cập nhật trạng thái đơn hàng");
+      console.error("Error cancelling order:", error);
+      toast.error("Có lỗi xảy ra khi hủy đơn hàng");
     } finally {
       setIsUpdating(null);
     }
+  };
+  
+  // Function to handle successful confirmation
+  const handleConfirmationSuccess = () => {
+    // Refresh the page to show updated status
+    window.location.reload();
   };
 
   // Function to get status badge color
@@ -156,27 +151,18 @@ export default function AdminOrdersTable({ orders }: AdminOrdersTableProps) {
                 </TableCell>
                 <TableCell className="text-right">
                   {order.status === "pending" && (
-                    <div className="flex items-center justify-end space-x-2">
+                    <div className="flex gap-2">
+                      <AdminOrderConfirmation
+                        orderId={order._id}
+                        paymentMethod={order.paymentMethod}
+                        disabled={isUpdating === order._id}
+                        onSuccess={handleConfirmationSuccess}
+                      />
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="text-green-600 border-green-200 hover:bg-green-50 hover:text-green-700"
-                        onClick={() =>
-                          handleStatusChange(order._id, "completed")
-                        }
+                        variant="destructive"
                         disabled={isUpdating === order._id}
-                      >
-                        <CheckCircle className="h-4 w-4 mr-1" />
-                        Xác nhận
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700"
-                        onClick={() =>
-                          handleStatusChange(order._id, "cancelled")
-                        }
-                        disabled={isUpdating === order._id}
+                        onClick={() => handleCancelOrder(order._id)}
                       >
                         <XCircle className="h-4 w-4 mr-1" />
                         Hủy

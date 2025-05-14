@@ -196,3 +196,27 @@ export async function getCourses(params?: {
     return [];
   }
 }
+
+// Get all course IDs for subscription functionality
+export async function getAllCourseIds() {
+  try {
+    const query = groq`
+      *[_type == "course"] {
+        _id
+      }
+    `;
+    
+    const courses = await client.fetch(query);
+    
+    if (!courses || courses.length === 0) {
+      return { success: false, data: [] };
+    }
+    
+    const courseIds = courses.map((course: any) => course._id);
+    
+    return { success: true, data: courseIds };
+  } catch (error) {
+    console.error("Error fetching course IDs:", error);
+    return { success: false, error: "Failed to fetch course IDs", data: [] };
+  }
+}

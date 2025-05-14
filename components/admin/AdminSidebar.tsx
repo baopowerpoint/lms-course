@@ -7,7 +7,8 @@ import {
   Users, 
   ShoppingCart, 
   BookOpen, 
-  LogOut 
+  LogOut,
+  CreditCard
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
 
@@ -24,6 +25,11 @@ const AdminSidebar = () => {
       icon: Users,
       label: "Quản lý người dùng",
       href: "/admin/users",
+    },
+    {
+      icon: CreditCard,
+      label: "Quản lý thanh toán",
+      href: "/admin/payments",
     },
     {
       icon: ShoppingCart,

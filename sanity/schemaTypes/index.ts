@@ -8,6 +8,7 @@ import { courseType } from './courseType'
 import { lessonType } from './lessonType'
 import { moduleType } from './moduleType'
 import { studentType } from './studentType'
+import { questionType } from './questionType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [blockContentType,
@@ -17,6 +18,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     lessonType,
     moduleType,
     postType,
-    studentType
+    studentType,
+    questionType
   ],
 }

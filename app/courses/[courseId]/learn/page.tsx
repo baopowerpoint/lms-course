@@ -10,9 +10,13 @@ interface Lesson {
   _id: string;
   title: string;
   description?: string;
+  lessonType: "video" | "quiz";
   videoUrl?: string;
   notes?: string;
   attachments?: { name: string; url: string }[];
+  questions?: Question[];
+  passingScore?: number;
+  timeLimit?: number;
 }
 
 // Định nghĩa lại interface để phù hợp với các trường từ Sanity
@@ -20,7 +24,31 @@ interface SanityLesson {
   _id: string;
   title?: string;
   description?: string;
+  lessonType?: "video" | "quiz";
   videoUrl?: string;
+  questions?: SanityQuestion[];
+  passingScore?: number;
+  timeLimit?: number;
+}
+
+interface SanityQuestion {
+  _id: string;
+  content?: string;
+  type?: string;
+  points?: number;
+  explanation?: string;
+  choices?: { text: string; isCorrect: boolean }[];
+  correctAnswer?: string;
+}
+
+interface Question {
+  _id: string;
+  content: string;
+  type: string;
+  points: number;
+  explanation?: string;
+  choices?: { text: string; isCorrect: boolean }[];
+  correctAnswer?: string;
 }
 
 interface Module {
@@ -105,9 +133,22 @@ export default async function CourseLearnPage({ params }: RouteParams) {
             _id: lesson._id,
             title: lesson.title || "",
             description: lesson.description,
+            lessonType: lesson.lessonType || "video", // Default to video if not specified
             videoUrl: lesson.videoUrl || "",
             notes: "", // Default value for notes
             attachments: [], // Default empty array for attachments
+            // Convert SanityQuestion to Question with proper defaults for required fields
+            questions: lesson.questions?.map(q => ({
+              _id: q._id,
+              content: q.content || "",
+              type: q.type || "singleChoice",
+              points: q.points || 1,
+              explanation: q.explanation,
+              choices: q.choices,
+              correctAnswer: q.correctAnswer
+            })) || [],
+            passingScore: lesson.passingScore || 70,
+            timeLimit: lesson.timeLimit || 0,
           })) || [],
       })) || [],
     coverImage: course.image,

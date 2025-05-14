@@ -8,24 +8,127 @@ import { getCourses, Course } from "@/lib/actions/course.action";
 import { Button } from "@/components/ui/button";
 import { BookOpenCheck, Loader2 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
-import AddToCartButton from "@/components/cart/AddToCartButton";
-import { checkCourseAccess } from "@/lib/actions/enrollment.action";
+import { checkUserPayment, checkCourseAccess } from "@/lib/actions/payment.actions";
 import { useAuth } from "@clerk/nextjs";
+import { toast } from "sonner";
+
+// EnrollCourseButton component for direct enrollment without shopping cart
+const EnrollCourseButton = ({ course }: { course: Course }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasPaid, setHasPaid] = useState(false);
+  const [isCheckingPayment, setIsCheckingPayment] = useState(true);
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
+
+  // Check user's payment status
+  useEffect(() => {
+    const checkPaymentStatus = async () => {
+      if (isSignedIn) {
+        try {
+          setIsCheckingPayment(true);
+          const result = await checkUserPayment();
+          setHasPaid(result.success && result.data?.hasPaid);
+        } catch (error) {
+          console.error("Error checking payment status:", error);
+        } finally {
+          setIsCheckingPayment(false);
+        }
+      } else {
+        setHasPaid(false);
+        setIsCheckingPayment(false);
+      }
+    };
+
+    checkPaymentStatus();
+  }, [isSignedIn]);
+
+  const handleEnroll = async () => {
+    if (!isSignedIn) {
+      router.push("/sign-in");
+      return;
+    }
+
+    if (!hasPaid) {
+      // If user hasn't paid, redirect to subscription page
+      router.push("/subscription");
+      return;
+    }
+
+    // Với hệ thống đơn giản hóa, người dùng đã thanh toán tự động có quyền truy cập tất cả khóa học
+    try {
+      setIsLoading(true);
+      // Kiểm tra xem người dùng có quyền truy cập không
+      const accessResult = await checkCourseAccess();
+      
+      if (accessResult.success && accessResult.hasAccess) {
+        toast.success("Bạn có quyền truy cập vào khóa học này!");
+        router.push(`/dashboard/courses/${course.slug}/learn`);
+      } else {
+        toast.error("Thanh toán của bạn chưa được duyệt. Vui lòng chờ admin xác nhận.");
+      }
+    } catch (error) {
+      toast.error("Đã xảy ra lỗi khi kiểm tra quyền truy cập.");
+      console.error("Error checking course access:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isCheckingPayment) {
+    return (
+      <Button variant="outline" size="sm" className="w-full" disabled>
+        Đang kiểm tra...
+      </Button>
+    );
+  }
+
+  if (hasPaid) {
+    return (
+      <Button 
+        onClick={handleEnroll} 
+        size="sm" 
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            Đang đăng ký...
+          </>
+        ) : (
+          <>Đăng ký khóa học</>
+        )}
+      </Button>
+    );
+  }
+
+  return (
+    <Button 
+      onClick={handleEnroll} 
+      variant="outline" 
+      size="sm" 
+      className="w-full"
+    >
+      Thanh toán để học
+    </Button>
+  );
+};
 
 const CourseCard = ({ course }: { course: Course }) => {
   const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
-  const [isCheckingEnrollment, setIsCheckingEnrollment] = useState<boolean>(true);
+  const [isCheckingEnrollment, setIsCheckingEnrollment] =
+    useState<boolean>(true);
   const { isSignedIn } = useAuth();
   const router = useRouter();
-  
-  // Check if user is enrolled in this course
+
+  // Check if user has access to courses (has completed payment)
   useEffect(() => {
     const checkEnrollment = async () => {
       if (isSignedIn) {
         try {
           setIsCheckingEnrollment(true);
-          const hasAccess = await checkCourseAccess(course._id);
-          setIsEnrolled(hasAccess);
+          const result = await checkCourseAccess();
+          setIsEnrolled(result.success && result.hasAccess);
         } catch (error) {
           console.error("Error checking course access:", error);
         } finally {
@@ -36,10 +139,10 @@ const CourseCard = ({ course }: { course: Course }) => {
         setIsCheckingEnrollment(false);
       }
     };
-    
+
     checkEnrollment();
   }, [course._id, isSignedIn]);
-  
+
   // Generate a pastel background color based on the course title
   const generateColor = (str: string) => {
     const colors = [
@@ -52,16 +155,20 @@ const CourseCard = ({ course }: { course: Course }) => {
       "bg-yellow-100",
       "bg-indigo-100",
     ];
-    
+
     // Simple hash function to determine color index
-    const hash = str.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hash = str
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
     return colors[hash % colors.length];
   };
 
   // Generate an emoji based on the course title or category
   const generateEmoji = (str: string) => {
     const emojis = ["📚", "🧮", "📐", "🔢", "📊", "🔍", "📝", "🧩"];
-    const hash = str.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const hash = str
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
     return emojis[hash % emojis.length];
   };
 
@@ -72,10 +179,12 @@ const CourseCard = ({ course }: { course: Course }) => {
     <div className="bg-white rounded-xl shadow-sm hover:shadow-md overflow-hidden border border-gray-100 h-full flex flex-col transition-all duration-300 hover:-translate-y-1">
       {/* Course image/header - clickable to course details */}
       <Link href={`/courses/${course.slug}`}>
-        <div className={`relative h-40 ${bgColor} flex items-center justify-center overflow-hidden`}>
+        <div
+          className={`relative h-40 ${bgColor} flex items-center justify-center overflow-hidden`}
+        >
           {course.image ? (
-            <Image 
-              src={course.image} 
+            <Image
+              src={course.image}
               alt={course.title}
               fill
               className="object-cover"
@@ -85,12 +194,14 @@ const CourseCard = ({ course }: { course: Course }) => {
           )}
         </div>
       </Link>
-      
+
       <div className="p-6 flex-grow flex flex-col">
         {/* Course title and category - clickable to course details */}
         <Link href={`/courses/${course.slug}`} className="group">
           <div className="flex justify-between items-start gap-2 mb-3">
-            <h3 className="font-bold text-lg line-clamp-2 group-hover:text-primary transition-colors">{course.title}</h3>
+            <h3 className="font-bold text-lg line-clamp-2 group-hover:text-primary transition-colors">
+              {course.title}
+            </h3>
             {course.category && (
               <span className="text-xs font-medium py-1 px-2 bg-gray-100 rounded-full whitespace-nowrap">
                 {course.category.name}
@@ -98,18 +209,23 @@ const CourseCard = ({ course }: { course: Course }) => {
             )}
           </div>
         </Link>
-        
+
         {course.description && (
           <Link href={`/courses/${course.slug}`}>
-            <p className="text-sm text-gray-600 mb-4 line-clamp-2 hover:text-gray-800 transition-colors">{course.description}</p>
+            <p className="text-sm text-gray-600 mb-4 line-clamp-2 hover:text-gray-800 transition-colors">
+              {course.description}
+            </p>
           </Link>
         )}
-        
+
         <div className="mt-auto">
           {course.tags && course.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-3">
               {course.tags.slice(0, 3).map((tag, index) => (
-                <span key={index} className="text-xs py-1 px-2 bg-gray-50 text-gray-600 rounded-full">
+                <span
+                  key={index}
+                  className="text-xs py-1 px-2 bg-gray-50 text-gray-600 rounded-full"
+                >
                   {tag}
                 </span>
               ))}
@@ -120,14 +236,14 @@ const CourseCard = ({ course }: { course: Course }) => {
               )}
             </div>
           )}
-          
+
           <Link href={`/courses/${course.slug}`}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 {course.author && course.author.image && (
                   <div className="relative w-6 h-6 rounded-full overflow-hidden">
-                    <Image 
-                      src={course.author.image} 
+                    <Image
+                      src={course.author.image}
                       alt={course.author.name}
                       fill
                       className="object-cover"
@@ -135,7 +251,9 @@ const CourseCard = ({ course }: { course: Course }) => {
                   </div>
                 )}
                 {course.author && (
-                  <span className="text-xs text-gray-600">{course.author.name}</span>
+                  <span className="text-xs text-gray-600">
+                    {course.author.name}
+                  </span>
                 )}
               </div>
               <span className="font-semibold text-primary">
@@ -143,7 +261,7 @@ const CourseCard = ({ course }: { course: Course }) => {
               </span>
             </div>
           </Link>
-          
+
           {/* Add to Cart button OR Go to Course button */}
           <div onClick={(e) => e.stopPropagation()}>
             {isCheckingEnrollment ? (
@@ -151,9 +269,9 @@ const CourseCard = ({ course }: { course: Course }) => {
                 Đang kiểm tra...
               </Button>
             ) : isEnrolled ? (
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="w-full bg-green-50 text-green-700 hover:bg-green-100 border-green-200"
                 onClick={() => router.push(`/courses/${course._id}/learn`)}
               >
@@ -161,12 +279,7 @@ const CourseCard = ({ course }: { course: Course }) => {
                 Vào học ngay
               </Button>
             ) : (
-              <AddToCartButton 
-                course={course}
-                variant="outline"
-                size="sm"
-                fullWidth={true}
-              />
+              <EnrollCourseButton course={course} />
             )}
           </div>
         </div>
@@ -181,11 +294,11 @@ const Courses = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  
+
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const category = searchParams.get("category") || "";
-  
+
   useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true);
@@ -194,9 +307,9 @@ const Courses = () => {
           query,
           category,
           page: 1,
-          limit: 8
+          limit: 8,
         });
-        
+
         setCourses(data);
         setHasMore(data.length === 8);
         setPage(1);
@@ -206,13 +319,13 @@ const Courses = () => {
         setLoading(false);
       }
     };
-    
+
     fetchCourses();
   }, [query, category]);
-  
+
   const handleLoadMore = async () => {
     if (loadingMore) return;
-    
+
     setLoadingMore(true);
     try {
       const nextPage = page + 1;
@@ -220,11 +333,11 @@ const Courses = () => {
         query,
         category,
         page: nextPage,
-        limit: 8
+        limit: 8,
       });
-      
+
       if (data.length > 0) {
-        setCourses(prev => [...prev, ...data]);
+        setCourses((prev) => [...prev, ...data]);
         setPage(nextPage);
         setHasMore(data.length === 8);
       } else {
@@ -236,7 +349,7 @@ const Courses = () => {
       setLoadingMore(false);
     }
   };
-  
+
   if (loading) {
     return (
       <div className="mt-10 flex justify-center items-center py-20">
@@ -244,14 +357,18 @@ const Courses = () => {
       </div>
     );
   }
-  
+
   if (courses.length === 0) {
     return (
       <div className="mt-10 py-20 text-center">
         <div className="text-4xl mb-4">🔍</div>
-        <h3 className="text-xl font-semibold mb-2">Không tìm thấy khóa học nào</h3>
-        <p className="text-gray-600 mb-6">Vui lòng thử với từ khóa khác hoặc xem tất cả khóa học của chúng tôi</p>
-        <Button 
+        <h3 className="text-xl font-semibold mb-2">
+          Không tìm thấy khóa học nào
+        </h3>
+        <p className="text-gray-600 mb-6">
+          Vui lòng thử với từ khóa khác hoặc xem tất cả khóa học của chúng tôi
+        </p>
+        <Button
           variant="outline"
           onClick={() => {
             const url = new URL(window.location.href);
@@ -265,15 +382,15 @@ const Courses = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="mt-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {courses.map(course => (
+        {courses.map((course) => (
           <CourseCard key={course._id} course={course} />
         ))}
       </div>
-      
+
       {hasMore && (
         <div className="mt-10 flex justify-center">
           <Button

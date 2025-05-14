@@ -68,6 +68,24 @@ export type Geopoint = {
   alt?: number;
 };
 
+export type Question = {
+  _id: string;
+  _type: "question";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  content?: string;
+  type?: "singleChoice" | "multipleChoice" | "fillInBlank" | "essay";
+  choices?: Array<{
+    text?: string;
+    isCorrect?: boolean;
+    _key: string;
+  }>;
+  correctAnswer?: string;
+  points?: number;
+  explanation?: string;
+};
+
 export type Student = {
   _id: string;
   _type: "student";
@@ -193,6 +211,32 @@ export type Lesson = {
     level?: number;
     _type: "block";
     _key: string;
+  }>;
+  quiz?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "quiz";
+  };
+};
+
+export type Quiz = {
+  _id: string;
+  _type: "quiz";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  description?: string;
+  passingScore?: number;
+  timeLimit?: number;
+  questions?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "question";
   }>;
 };
 
@@ -386,7 +430,7 @@ export type SanityImageMetadata = {
   isOpaque?: boolean;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Student | Post | Module | Lesson | Course | Category | Author | Slug | BlockContent | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Question | Student | Post | Module | Lesson | Quiz | Course | Category | Author | Slug | BlockContent | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: sanity/queries.ts
 // Variable: COURSES_QUERY

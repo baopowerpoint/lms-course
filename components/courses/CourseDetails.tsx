@@ -6,60 +6,55 @@ import Link from "next/link";
 import { Course } from "@/lib/actions/course.action";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  BookOpen,
-  ChevronDown,
-  ChevronUp,
-  Clock,
-  Play,
-  User,
-  Tag,
-  BookOpenCheck,
-} from "lucide-react";
+import { BookOpen, ChevronDown, ChevronUp, Clock, Play, User, Tag, BookOpenCheck, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import AddToCartButton from "@/components/cart/AddToCartButton";
-import { checkCourseAccess } from "@/lib/actions/enrollment.action";
+import AccessButton from "@/components/courses/AccessButton";
 import { useAuth } from "@clerk/nextjs";
+import { checkUserPayment, checkCourseAccess } from "@/lib/actions/payment.actions";
 
 interface CourseDetailsProps {
   course: Course;
+}
+
+interface Module {
+  _id: string;
+  title: string;
+  lessons?: Lesson[];
+}
+
+interface Lesson {
+  _id: string;
+  title: string;
+  description?: string;
+  duration?: number;
+}
+
+interface Author {
+  name: string;
+  image?: string;
+  bio?: string;
+}
+
+interface Category {
+  name: string;
 }
 
 const CourseDetails = ({ course }: CourseDetailsProps) => {
   const [expandedModules, setExpandedModules] = useState<
     Record<string, boolean>
   >({});
-  const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
   const [isCheckingEnrollment, setIsCheckingEnrollment] =
     useState<boolean>(true);
   const router = useRouter();
   const { isSignedIn } = useAuth();
 
-  // Check if user is enrolled in this course
+  // Đơn giản hóa việc kiểm tra quyền truy cập - đã được chuyển sang AccessButton
   useEffect(() => {
-    const checkEnrollment = async () => {
-      if (isSignedIn) {
-        try {
-          setIsCheckingEnrollment(true);
-          const hasAccess = await checkCourseAccess(course._id);
-          setIsEnrolled(hasAccess);
-        } catch (error) {
-          console.error("Error checking course access:", error);
-        } finally {
-          setIsCheckingEnrollment(false);
-        }
-      } else {
-        setIsEnrolled(false);
-        setIsCheckingEnrollment(false);
-      }
-    };
-
-    checkEnrollment();
-  }, [course._id, isSignedIn]);
+    setIsCheckingEnrollment(false);
+  }, []);
 
   const handleEnrollCourse = () => {
-    // This would typically check for user authentication and handle enrollment
-    // For now, we'll just navigate to the first lesson if available
+    // Xem thử bài học hoặc học miễn phí
     if (
       course.modules &&
       course.modules.length > 0 &&
@@ -79,7 +74,7 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
     }));
   };
 
-  // Generate a pastel background color based on the course title for hero section
+  // Tạo màu nền gradient cho hero section
   const generateHeroColor = (title: string) => {
     const colors = [
       "from-emerald-50 to-emerald-100/50",
@@ -98,20 +93,20 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
 
   const heroColor = generateHeroColor(course.title);
 
-  // Calculate total lessons and estimated duration
+  // Tính tổng số bài học
   const totalLessons =
     course.modules?.reduce(
-      (acc, module) => acc + (module.lessons?.length || 0),
+      (acc: number, module: any) => acc + (module.lessons?.length || 0),
       0
     ) || 0;
 
-  // Determine if there are any course modules to display
+  // Kiểm tra có module nào không
   const hasModules = course.modules && course.modules.length > 0;
 
   return (
-    <div>
+    <React.Fragment>
       {/* Hero Section */}
-      <section className={`py-16 md:py-24 bg-gradient-to-b ${heroColor}`}>
+      <div className={`py-16 md:py-24 bg-gradient-to-b ${heroColor}`}>
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
             <div className="md:col-span-7">
@@ -183,42 +178,47 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
                 )}
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              {/* Thanh toán / Truy cập */}
+              <div className="mb-4">
+                <div className="text-2xl font-bold mb-2">
+                  {formatPrice(course.price)}
+                </div>
                 {isCheckingEnrollment ? (
-                  <Button size="lg" className="px-8" disabled>
-                    Đang kiểm tra...
+                  <Button disabled className="w-full">
+                    Đang tải...
                   </Button>
-                ) : isEnrolled ? (
-                  <Button
-                    size="lg"
-                    className="px-8 bg-green-600 hover:bg-green-700"
-                    onClick={() => router.push(`/courses/${course._id}/learn`)}
-                  >
-                    <BookOpenCheck className="w-4 h-4 mr-2" />
-                    Vào học ngay
-                  </Button>
+                ) : isSignedIn ? (
+                  <AccessButton
+                    courseId={course._id}
+                    courseSlug={course.slug}
+                  />
                 ) : (
-                  <AddToCartButton course={course} size="lg" className="px-8" />
+                  <Link href="/sign-in" passHref>
+                    <Button variant="outline" className="w-full">
+                      Đăng nhập để tiếp tục
+                    </Button>
+                  </Link>
                 )}
+              </div>
 
-                {!isEnrolled && (
-                  <Button
-                    size="lg"
-                    className="px-8"
-                    onClick={handleEnrollCourse}
-                    variant="outline"
-                  >
-                    {course.price > 0 ? "Xem thử bài học" : "Học miễn phí"}
-                  </Button>
-                )}
+              {/* Nút xem thử */}
+              <div className="mt-4">
+                <Button
+                  size="lg"
+                  className="px-8"
+                  onClick={handleEnrollCourse}
+                  variant="outline"
+                >
+                  {course.price > 0 ? "Xem thử bài học" : "Học miễn phí"}
+                </Button>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Course Content Section */}
-      <section className="py-16">
+      <div className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
@@ -239,7 +239,7 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
 
               {hasModules && course.modules && (
                 <div className="space-y-4">
-                  {course.modules.map((module, moduleIndex) => (
+                  {course.modules.map((module: any, moduleIndex: number) => (
                     <div
                       key={module._id}
                       className="border border-gray-200 rounded-lg overflow-hidden"
@@ -270,34 +270,36 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
                         module.lessons &&
                         module.lessons.length > 0 && (
                           <div className="divide-y divide-gray-100">
-                            {module.lessons.map((lesson, lessonIndex) => (
-                              <div
-                                key={lesson._id}
-                                className="p-4 hover:bg-gray-50"
-                              >
-                                <div className="flex items-start">
-                                  <span className="font-medium text-gray-500 mr-3">
-                                    {moduleIndex + 1}.{lessonIndex + 1}
-                                  </span>
-                                  <div>
-                                    <h4 className="font-medium">
-                                      {lesson.title}
-                                    </h4>
-                                    {lesson.description && (
-                                      <p className="text-sm text-gray-600 mt-1">
-                                        {lesson.description}
-                                      </p>
-                                    )}
-                                    {lesson.duration && (
-                                      <div className="flex items-center mt-2 text-sm text-gray-500">
-                                        <Clock className="w-4 h-4 mr-1" />
-                                        <span>{lesson.duration} phút</span>
-                                      </div>
-                                    )}
+                            {module.lessons.map(
+                              (lesson: any, lessonIndex: number) => (
+                                <div
+                                  key={lesson._id}
+                                  className="p-4 hover:bg-gray-50"
+                                >
+                                  <div className="flex items-start">
+                                    <span className="font-medium text-gray-500 mr-3">
+                                      {moduleIndex + 1}.{lessonIndex + 1}
+                                    </span>
+                                    <div>
+                                      <h4 className="font-medium">
+                                        {lesson.title}
+                                      </h4>
+                                      {lesson.description && (
+                                        <p className="text-sm text-gray-600 mt-1">
+                                          {lesson.description}
+                                        </p>
+                                      )}
+                                      {lesson.duration && (
+                                        <div className="flex items-center mt-2 text-sm text-gray-500">
+                                          <Clock className="w-4 h-4 mr-1" />
+                                          <span>{lesson.duration} phút</span>
+                                        </div>
+                                      )}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))}
+                              )
+                            )}
                           </div>
                         )}
                     </div>
@@ -340,7 +342,7 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
                     <h3 className="font-semibold">Tags</h3>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {course.tags.map((tag, index) => (
+                    {course.tags.map((tag: string, index: number) => (
                       <Link
                         key={index}
                         href={`/courses?q=${encodeURIComponent(tag)}`}
@@ -355,8 +357,8 @@ const CourseDetails = ({ course }: CourseDetailsProps) => {
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </React.Fragment>
   );
 };
 

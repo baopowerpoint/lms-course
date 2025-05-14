@@ -107,7 +107,7 @@ export const getCourseBySlug = cache(
             _id,
             title,
             description,
-            video,
+            videoUrl,
             duration
           }
         }
@@ -205,15 +205,15 @@ export async function getAllCourseIds() {
         _id
       }
     `;
-    
+
     const courses = await client.fetch(query);
-    
+
     if (!courses || courses.length === 0) {
       return { success: false, data: [] };
     }
-    
+
     const courseIds = courses.map((course: any) => course._id);
-    
+
     return { success: true, data: courseIds };
   } catch (error) {
     console.error("Error fetching course IDs:", error);

@@ -161,6 +161,7 @@ export async function getUserPayments() {
 }
 
 // Kiểm tra người dùng có quyền truy cập vào khóa học hay không
+// (Đã đơn giản hóa - chỉ kiểm tra xem người dùng đã có payment thành công chưa)
 export async function checkCourseAccess() {
   try {
     await dbConnect();
@@ -168,30 +169,25 @@ export async function checkCourseAccess() {
     // Lấy thông tin user hiện tại
     const { userId } = await auth();
     if (!userId) {
-      return { success: false, hasAccess: false, error: "User not authenticated" };
+      return { success: false, hasAccess: false };
     }
 
     // Tìm user trong database
     const user = await User.findOne({ clerkId: userId });
     if (!user) {
-      return { success: false, hasAccess: false, error: "User not found" };
+      return { success: false, hasAccess: false };
     }
 
-    // Kiểm tra người dùng đã thanh toán và được duyệt chưa
+    // Kiểm tra đơn giản - người dùng có bất kỳ thanh toán nào đã hoàn thành chưa
     const payment = await Payment.findOne({
       user: user._id,
-      status: "completed", // Chỉ cho phép truy cập khi thanh toán đã được admin duyệt
+      status: "completed"
     });
 
-    if (!payment) {
-      return { success: true, hasAccess: false };
-    }
-
-    // Nếu có thanh toán hoàn thành, cho phép truy cập
-    return { success: true, hasAccess: true };
+    return { success: true, hasAccess: !!payment };
   } catch (error) {
     console.error("Error checking course access:", error);
-    return { success: false, hasAccess: false, error: "Failed to check course access" };
+    return { success: false, hasAccess: false };
   }
 }
 

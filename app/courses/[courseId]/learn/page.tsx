@@ -1,5 +1,5 @@
 import { getCourseById, getCourseBySlug } from "@/lib/actions/course.action";
-import { checkCourseAccess } from "@/lib/actions/enrollment.action";
+import { checkCourseAccess } from "@/lib/actions/payment.actions";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
@@ -103,18 +103,18 @@ export default async function CourseLearnPage({ params }: RouteParams) {
   }
 
   const { courseId } = await params;
-  const course = await getCourseById(courseId);
+  const course = await getCourseBySlug(courseId);
 
   // Redirect if course doesn't exist
   if (!course) {
     redirect("/courses");
   }
 
-  // Check if user has access to this course
-  const hasAccess = await checkCourseAccess(course._id);
+  // Chỉ kiểm tra đơn giản xem user đã có payment thành công chưa
+  const accessResult = await checkCourseAccess();
 
-  // Redirect if user doesn't have access
-  if (!hasAccess) {
+  // Chuyển hướng nếu không có quyền truy cập
+  if (!accessResult.hasAccess) {
     redirect(`/courses/${courseId}?access=denied`);
   }
 
@@ -138,15 +138,16 @@ export default async function CourseLearnPage({ params }: RouteParams) {
             notes: "", // Default value for notes
             attachments: [], // Default empty array for attachments
             // Convert SanityQuestion to Question with proper defaults for required fields
-            questions: lesson.questions?.map(q => ({
-              _id: q._id,
-              content: q.content || "",
-              type: q.type || "singleChoice",
-              points: q.points || 1,
-              explanation: q.explanation,
-              choices: q.choices,
-              correctAnswer: q.correctAnswer
-            })) || [],
+            questions:
+              lesson.questions?.map((q) => ({
+                _id: q._id,
+                content: q.content || "",
+                type: q.type || "singleChoice",
+                points: q.points || 1,
+                explanation: q.explanation,
+                choices: q.choices,
+                correctAnswer: q.correctAnswer,
+              })) || [],
             passingScore: lesson.passingScore || 70,
             timeLimit: lesson.timeLimit || 0,
           })) || [],
@@ -157,7 +158,8 @@ export default async function CourseLearnPage({ params }: RouteParams) {
       picture: course.author?.image || undefined,
     },
   };
-
+  console.log(course);
+  console.log(adaptedCourse);
   return (
     <div className="w-full min-h-screen bg-gray-50">
       <CourseContent course={adaptedCourse} />

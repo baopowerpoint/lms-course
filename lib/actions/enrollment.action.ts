@@ -72,13 +72,46 @@ export async function checkCourseAccess(courseId: string) {
       return false;
     }
 
-    // Check if the user has an enrollment for this course
+    // Đầu tiên, kiểm tra xem người dùng có ghi danh vào khóa học này không
     const enrollment = await Enrollment.findOne({
       user: user._id,
       course: courseId,
     });
 
-    return !!enrollment;
+    if (enrollment) {
+      return true;
+    }
+
+    // Nếu không có ghi danh, kiểm tra xem người dùng có thanh toán hoàn thành không
+    // Import cần thiết để tránh circular dependency
+    const { Payment } = await import("@/database");
+    
+    const payment = await Payment.findOne({
+      user: user._id,
+      status: "completed",
+    });
+
+    // Nếu người dùng có thanh toán hoàn thành, tự động tạo ghi danh cho khóa học này
+    if (payment) {
+      try {
+        // Tạo ghi danh mới cho khóa học
+        const newEnrollment = await Enrollment.create({
+          user: user._id,
+          course: courseId,
+          enrolledAt: new Date(),
+          lastAccessed: new Date(),
+        });
+        
+        // Kiểm tra nếu tạo ghi danh thành công
+        if (newEnrollment) {
+          return true;
+        }
+      } catch (enrollmentError) {
+        console.error("Error creating enrollment:", enrollmentError);
+      }
+    }
+
+    return false;
   } catch (error) {
     console.error("Error checking course access:", error);
     return false;

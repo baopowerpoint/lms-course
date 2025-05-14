@@ -54,17 +54,17 @@ const EnrollCourseButton = ({ course }: { course: Course }) => {
       return;
     }
 
-    // Với hệ thống đơn giản hóa, người dùng đã thanh toán tự động có quyền truy cập tất cả khóa học
+    // Kiểm tra quyền truy cập vào khóa học
     try {
       setIsLoading(true);
-      // Kiểm tra xem người dùng có quyền truy cập không
+      // Kiểm tra xem người dùng có bất kỳ thanh toán hoàn thành nào không
       const accessResult = await checkCourseAccess();
       
       if (accessResult.success && accessResult.hasAccess) {
         toast.success("Bạn có quyền truy cập vào khóa học này!");
-        router.push(`/dashboard/courses/${course.slug}/learn`);
+        router.push(`/courses/${course.slug}/learn`);
       } else {
-        toast.error("Thanh toán của bạn chưa được duyệt. Vui lòng chờ admin xác nhận.");
+        toast.error("Vui lòng thanh toán để truy cập khóa học.");
       }
     } catch (error) {
       toast.error("Đã xảy ra lỗi khi kiểm tra quyền truy cập.");
@@ -121,16 +121,16 @@ const CourseCard = ({ course }: { course: Course }) => {
   const { isSignedIn } = useAuth();
   const router = useRouter();
 
-  // Check if user has access to courses (has completed payment)
+  // Kiểm tra đơn giản - chỉ xem user đã có payment thành công chưa
   useEffect(() => {
-    const checkEnrollment = async () => {
+    const checkPayment = async () => {
       if (isSignedIn) {
         try {
           setIsCheckingEnrollment(true);
           const result = await checkCourseAccess();
-          setIsEnrolled(result.success && result.hasAccess);
+          setIsEnrolled(result.hasAccess);
         } catch (error) {
-          console.error("Error checking course access:", error);
+          console.error("Error checking payment:", error);
         } finally {
           setIsCheckingEnrollment(false);
         }
@@ -140,8 +140,8 @@ const CourseCard = ({ course }: { course: Course }) => {
       }
     };
 
-    checkEnrollment();
-  }, [course._id, isSignedIn]);
+    checkPayment();
+  }, [isSignedIn]);
 
   // Generate a pastel background color based on the course title
   const generateColor = (str: string) => {
@@ -266,6 +266,7 @@ const CourseCard = ({ course }: { course: Course }) => {
           <div onClick={(e) => e.stopPropagation()}>
             {isCheckingEnrollment ? (
               <Button variant="outline" size="sm" className="w-full" disabled>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Đang kiểm tra...
               </Button>
             ) : isEnrolled ? (
@@ -273,7 +274,10 @@ const CourseCard = ({ course }: { course: Course }) => {
                 variant="outline"
                 size="sm"
                 className="w-full bg-green-50 text-green-700 hover:bg-green-100 border-green-200"
-                onClick={() => router.push(`/courses/${course._id}/learn`)}
+                onClick={() => {
+                  // Chuyển hướng trực tiếp đến trang học
+                  router.push(`/courses/${course.slug}/learn`);
+                }}
               >
                 <BookOpenCheck className="w-4 h-4 mr-2" />
                 Vào học ngay

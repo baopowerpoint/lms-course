@@ -9,7 +9,6 @@ import {
   FileText,
   Download,
   FileQuestion,
-  Clock,
   AlertTriangle,
 } from "lucide-react";
 import Link from "next/link";
@@ -120,20 +119,25 @@ const CourseContent = ({ course }: CourseContentProps) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b">
-        <div className="container max-w-screen-xl py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-gray-900 truncate">
+        <div className="container max-w-screen-xl py-3 sm:py-4 px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
+            <h1 className="text-lg sm:text-xl font-bold text-gray-900 truncate max-w-[200px] sm:max-w-md">
               {course.title}
             </h1>
-            <div className="flex items-center gap-4">
-              <div className="text-sm">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto">
+              <div className="text-xs sm:text-sm flex items-center gap-2">
                 <span className="text-gray-500">Tiến độ: </span>
                 <span className="font-medium">{Math.round(progress)}%</span>
               </div>
-              <div className="w-28">
-                <Progress value={progress} className="h-2.5" />
+              <div className="w-24 sm:w-28">
+                <Progress value={progress} className="h-2 sm:h-2.5" />
               </div>
-              <Button size="sm" variant="outline" asChild>
+              <Button
+                size="sm"
+                variant="outline"
+                asChild
+                className="ml-auto sm:ml-0"
+              >
                 <Link href="/dashboard/courses">Quay lại</Link>
               </Button>
             </div>
@@ -370,36 +374,6 @@ const CourseContent = ({ course }: CourseContentProps) => {
               {activeLesson?.lessonType === "video" && (
                 <div className="mt-8 flex justify-between items-center">
                   {/* Complete Lesson Button */}
-                  <Button
-                    onClick={async () => {
-                      const result = await markLessonAsCompleted(
-                        activeLesson._id,
-                        course._id,
-                        activeModule._id
-                      );
-
-                      if (result.success) {
-                        toast.success("Đã đánh dấu hoàn thành bài học");
-                        // Refresh progress data
-                        const progress = await getCourseProgress(
-                          course._id,
-                          course.modules
-                        );
-                        setProgressData(progress);
-                      } else {
-                        toast.error("Không thể đánh dấu hoàn thành bài học");
-                      }
-                    }}
-                    disabled={
-                      progressData?.lessonProgress[activeLesson._id]
-                        ?.isCompleted
-                    }
-                  >
-                    <CheckCircle2 className="h-4 w-4 mr-2" />
-                    {progressData?.lessonProgress[activeLesson._id]?.isCompleted
-                      ? "Đã hoàn thành"
-                      : "Đánh dấu hoàn thành"}
-                  </Button>
 
                   {/* Navigation Buttons */}
                   <div className="flex gap-2">

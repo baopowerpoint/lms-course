@@ -86,20 +86,69 @@ export async function redeemCode(code: string) {
   try {
     await dbConnect();
 
+    // Kiểm tra mã có hợp lệ về mặt cú pháp
+    if (!code || typeof code !== 'string') {
+      return {
+        success: false,
+        error: "Vui lòng nhập mã kích hoạt",
+        errorCode: "EMPTY_CODE"
+      };
+    }
+
+    // Chuẩn hóa mã: chuyển thành chữ hoa và loại bỏ tất cả ký tự không phải chữ/số
+    const normalizedCode = code.toUpperCase().trim().replace(/[^A-Z0-9]/g, "");
+
+    // Kiểm tra độ dài của mã
+    if (normalizedCode.length !== 10) {
+      return {
+        success: false,
+        error: `Mã kích hoạt phải có đủ 10 ký tự (hiện tại có ${normalizedCode.length} ký tự)`,
+        errorCode: "INVALID_LENGTH"
+      };
+    }
+
+    // Kiểm tra mã có chỉ chứa chữ cái và số không
+    if (!/^[A-Z0-9]{10}$/.test(normalizedCode)) {
+      return {
+        success: false,
+        error: "Mã kích hoạt chỉ được chứa chữ cái và số",
+        errorCode: "INVALID_CHARS"
+      };
+    }
+
     // Lấy thông tin user hiện tại
     const { userId: clerkUserId } = await auth();
     if (!clerkUserId) {
-      return { success: false, error: "Bạn cần đăng nhập để sử dụng mã" };
+      return {
+        success: false,
+        error: "Bạn cần đăng nhập để sử dụng mã",
+        errorCode: "NOT_AUTHENTICATED"
+      };
     }
 
     // Tìm user trong database
     const user = await User.findOne({ clerkId: clerkUserId });
     if (!user) {
-      return { success: false, error: "Không tìm thấy thông tin người dùng" };
+      return {
+        success: false,
+        error: "Không tìm thấy thông tin người dùng",
+        errorCode: "USER_NOT_FOUND"
+      };
     }
 
-    // Chuẩn hóa mã: chuyển thành chữ hoa và loại bỏ khoảng trắng
-    const normalizedCode = code.toUpperCase().trim();
+    // Kiểm tra xem người dùng đã có quyền truy cập chưa
+    const existingCompletedPayment = await Payment.findOne({
+      user: user._id,
+      status: "completed"
+    });
+    
+    if (existingCompletedPayment) {
+      return {
+        success: false,
+        error: "Tài khoản của bạn đã được kích hoạt trước đó. Bạn đã có quyền truy cập vào tất cả các khóa học.",
+        errorCode: "ALREADY_ACTIVATED"
+      };
+    }
 
     // Tìm mã code trong database
     const redemptionCode = await RedemptionCode.findOne({
@@ -107,19 +156,35 @@ export async function redeemCode(code: string) {
     });
 
     if (!redemptionCode) {
-      return { success: false, error: "Mã không hợp lệ hoặc không tồn tại" };
+      return {
+        success: false,
+        error: "Mã kích hoạt không hợp lệ hoặc không tồn tại. Vui lòng kiểm tra lại mã.",
+        errorCode: "CODE_NOT_FOUND"
+      };
     }
 
     if (!redemptionCode.isActive) {
-      return { success: false, error: "Mã này đã bị vô hiệu hóa" };
+      return {
+        success: false,
+        error: "Mã kích hoạt này đã bị vô hiệu hóa. Vui lòng liên hệ với bộ phận hỗ trợ.",
+        errorCode: "CODE_DEACTIVATED"
+      };
     }
 
     if (redemptionCode.isRedeemed) {
-      return { success: false, error: "Mã này đã được sử dụng" };
+      return {
+        success: false,
+        error: "Mã kích hoạt này đã được sử dụng. Mỗi mã chỉ có thể sử dụng một lần duy nhất.",
+        errorCode: "CODE_ALREADY_USED"
+      };
     }
 
     if (redemptionCode.expiresAt && new Date() > redemptionCode.expiresAt) {
-      return { success: false, error: "Mã này đã hết hạn" };
+      return {
+        success: false,
+        error: "Mã kích hoạt này đã hết hạn. Vui lòng liên hệ với bộ phận hỗ trợ.",
+        errorCode: "CODE_EXPIRED"
+      };
     }
 
     // Cập nhật trạng thái của mã
@@ -157,7 +222,8 @@ export async function redeemCode(code: string) {
     console.error("Error redeeming code:", error);
     return {
       success: false,
-      error: "Không thể sử dụng mã. Vui lòng thử lại sau.",
+      error: "Hệ thống đang gặp sự cố. Vui lòng thử lại sau hoặc liên hệ hỗ trợ.",
+      errorCode: "SERVER_ERROR"
     };
   }
 }

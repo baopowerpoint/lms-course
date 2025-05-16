@@ -9,7 +9,8 @@ import {
   BookOpen, 
   LogOut,
   CreditCard,
-  KeyIcon
+  KeyIcon,
+  PlusCircle
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
 
@@ -41,6 +42,11 @@ const AdminSidebar = () => {
       icon: BookOpen,
       label: "Quản lý khóa học",
       href: "/admin/courses",
+    },
+    {
+      icon: PlusCircle,
+      label: "Tạo khóa học nhanh",
+      href: "/admin/course-creator",
     },
     {
       icon: KeyIcon,

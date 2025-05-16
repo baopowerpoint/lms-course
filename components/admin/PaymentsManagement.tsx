@@ -5,7 +5,7 @@ import { approvePayment, getAllPayments } from "@/lib/actions/payment.actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, Loader2, BanknoteIcon, KeyIcon, Smartphone } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -21,7 +21,7 @@ interface Payment {
   userName: string;
   userEmail: string;
   amount: number;
-  method: string;
+  method: "bank_transfer" | "momo" | "physical_code";
   status: "pending" | "completed";
   createdAt: string;
   updatedAt: string;
@@ -30,7 +30,8 @@ interface Payment {
 export default function PaymentsManagement() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState<"all" | "pending" | "completed">("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "pending" | "completed">("all");
+  const [methodFilter, setMethodFilter] = useState<"all" | "bank_transfer" | "momo" | "physical_code">("all");
   const [processingId, setProcessingId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -73,8 +74,17 @@ export default function PaymentsManagement() {
   }
 
   const filteredPayments = payments.filter((payment) => {
-    if (filter === "all") return true;
-    return payment.status === filter;
+    // Filter by status
+    if (statusFilter !== "all" && payment.status !== statusFilter) {
+      return false;
+    }
+    
+    // Filter by method
+    if (methodFilter !== "all" && payment.method !== methodFilter) {
+      return false;
+    }
+    
+    return true;
   });
 
   function formatDate(dateString: string) {
@@ -97,30 +107,80 @@ export default function PaymentsManagement() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div className="space-x-2">
-          <Button
-            variant={filter === "all" ? "default" : "outline"}
-            onClick={() => setFilter("all")}
-          >
-            Tất cả
-          </Button>
-          <Button
-            variant={filter === "pending" ? "default" : "outline"}
-            onClick={() => setFilter("pending")}
-          >
-            Đang chờ duyệt
-          </Button>
-          <Button
-            variant={filter === "completed" ? "default" : "outline"}
-            onClick={() => setFilter("completed")}
-          >
-            Đã duyệt
+      <div className="flex flex-col space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-medium">Phương thức thanh toán</h2>
+          <Button onClick={loadPayments} disabled={isLoading}>
+            {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Làm mới"}
           </Button>
         </div>
-        <Button onClick={loadPayments} disabled={isLoading}>
-          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Làm mới"}
-        </Button>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <h3 className="text-sm font-medium mb-2">Trạng thái</h3>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                size="sm"
+                variant={statusFilter === "all" ? "default" : "outline"}
+                onClick={() => setStatusFilter("all")}
+              >
+                Tất cả
+              </Button>
+              <Button
+                size="sm"
+                variant={statusFilter === "pending" ? "default" : "outline"}
+                onClick={() => setStatusFilter("pending")}
+              >
+                Đang chờ duyệt
+              </Button>
+              <Button
+                size="sm"
+                variant={statusFilter === "completed" ? "default" : "outline"}
+                onClick={() => setStatusFilter("completed")}
+              >
+                Đã duyệt
+              </Button>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-sm font-medium mb-2">Phương thức</h3>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                size="sm"
+                variant={methodFilter === "all" ? "default" : "outline"}
+                onClick={() => setMethodFilter("all")}
+              >
+                Tất cả
+              </Button>
+              <Button
+                size="sm"
+                variant={methodFilter === "bank_transfer" ? "default" : "outline"}
+                onClick={() => setMethodFilter("bank_transfer")}
+                className={methodFilter === "bank_transfer" ? "" : ""}
+              >
+                <BanknoteIcon className="h-4 w-4 mr-2" />
+                Chuyển khoản
+              </Button>
+              <Button
+                size="sm"
+                variant={methodFilter === "physical_code" ? "default" : "outline"}
+                onClick={() => setMethodFilter("physical_code")}
+              >
+                <KeyIcon className="h-4 w-4 mr-2" />
+                Mã kích hoạt
+              </Button>
+              <Button
+                size="sm"
+                variant={methodFilter === "momo" ? "default" : "outline"}
+                onClick={() => setMethodFilter("momo")}
+              >
+                <Smartphone className="h-4 w-4 mr-2" />
+                MoMo
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {isLoading ? (
@@ -130,7 +190,7 @@ export default function PaymentsManagement() {
         </div>
       ) : filteredPayments.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64 text-gray-500">
-          <p>Không có thanh toán nào {filter !== "all" ? `(${filter})` : ""}</p>
+          <p>Không có thanh toán nào {statusFilter !== "all" || methodFilter !== "all" ? `đã lọc` : ""}</p>
         </div>
       ) : (
         <div className="rounded-md border">
@@ -160,9 +220,24 @@ export default function PaymentsManagement() {
                   </TableCell>
                   <TableCell>{formatAmount(payment.amount)}</TableCell>
                   <TableCell>
-                    {payment.method === "bank_transfer"
-                      ? "Chuyển khoản ngân hàng"
-                      : "MoMo"}
+                    {payment.method === "bank_transfer" && (
+                      <div className="flex items-center space-x-1">
+                        <BanknoteIcon className="h-4 w-4 text-green-600" />
+                        <span className="font-medium text-green-700">Chuyển khoản ngân hàng</span>
+                      </div>
+                    )}
+                    {payment.method === "momo" && (
+                      <div className="flex items-center space-x-1">
+                        <Smartphone className="h-4 w-4 text-pink-600" />
+                        <span className="font-medium text-pink-700">MoMo</span>
+                      </div>
+                    )}
+                    {payment.method === "physical_code" && (
+                      <div className="flex items-center space-x-1">
+                        <KeyIcon className="h-4 w-4 text-blue-600" />
+                        <span className="font-medium text-blue-700">Mã kích hoạt</span>
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell>
                     {payment.status === "pending" ? (

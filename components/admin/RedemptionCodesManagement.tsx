@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -49,7 +49,12 @@ export default function RedemptionCodesManagement() {
   // No amount needed as codes don't have a specific value
   const [quantity, setQuantity] = useState(1);
 
-  // Fetch codes on initial load
+  // useEffect to fetch codes on component mount
+  useEffect(() => {
+    fetchCodes();
+  }, []);
+
+  // Fetch codes function
   const fetchCodes = async () => {
     setIsLoading(true);
     try {

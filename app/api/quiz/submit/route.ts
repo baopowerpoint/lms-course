@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/mongoose";
 import QuizAttempt from "@/database/quizAttempt.model";
 
 export async function POST(req: NextRequest) {
@@ -17,14 +17,8 @@ export async function POST(req: NextRequest) {
 
     // Get quiz submission data from request body
     const body = await req.json();
-    const {
-      lessonId,
-      courseId,
-      moduleId,
-      score,
-      isPassed,
-      attemptDetails,
-    } = body;
+    const { lessonId, courseId, moduleId, score, isPassed, attemptDetails } =
+      body;
 
     // Validate required fields
     if (!lessonId || !courseId || !moduleId || score === undefined) {
@@ -35,7 +29,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Connect to database
-    await connectToDatabase();
+    await dbConnect();
 
     // Create a new quiz attempt
     const quizAttempt = await QuizAttempt.create({

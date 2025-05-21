@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Message, User } from "@/database";
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/mongoose";
 
 // GET /api/chat/users - Get users who have chat messages
 export async function GET(req: NextRequest) {
   try {
-    await connectToDatabase();
+    await dbConnect();
 
     // Find unique users who have sent messages
     const messages = await Message.find({}).sort({ createdAt: -1 });

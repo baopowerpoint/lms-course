@@ -1,6 +1,6 @@
 "use server";
 
-import { connectToDatabase } from "@/lib/db";
+import dbConnect from "@/lib/mongoose";
 import QuizAttempt from "@/database/quizAttempt.model";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
@@ -31,7 +31,7 @@ export async function getQuizAttempts(courseId: string) {
     const userId = session.userId;
     if (!userId) return null;
 
-    await connectToDatabase();
+    await dbConnect();
 
     // Find all quiz attempts for this user and course
     const quizAttempts = await QuizAttempt.find({
@@ -49,13 +49,16 @@ export async function getQuizAttempts(courseId: string) {
 /**
  * Get the user's progress for a specific course
  */
-export async function getCourseProgress(courseId: string, modules: any[]): Promise<CourseProgress | null> {
+export async function getCourseProgress(
+  courseId: string,
+  modules: any[]
+): Promise<CourseProgress | null> {
   try {
     const session = await auth();
     const userId = session.userId;
     if (!userId) return null;
 
-    await connectToDatabase();
+    await dbConnect();
 
     // Find all quiz attempts for this user and course
     const quizAttempts = await QuizAttempt.find({
@@ -86,7 +89,7 @@ export async function getCourseProgress(courseId: string, modules: any[]): Promi
     modules.forEach((module) => {
       module.lessons?.forEach((lesson: any) => {
         const attempt = quizAttemptsMap.get(lesson._id);
-        
+
         // For quiz lessons, we consider them completed if there's a passed attempt
         if (lesson.lessonType === "quiz" && attempt) {
           const isCompleted = attempt.isPassed;
@@ -104,10 +107,14 @@ export async function getCourseProgress(courseId: string, modules: any[]): Promi
           }
 
           // Update last activity date
-          if (!lastActivityDate || new Date(attempt.createdAt) > (lastActivityDate ? new Date(lastActivityDate) : new Date(0))) {
+          if (
+            !lastActivityDate ||
+            new Date(attempt.createdAt) >
+              (lastActivityDate ? new Date(lastActivityDate) : new Date(0))
+          ) {
             lastActivityDate = attempt.createdAt;
           }
-        } 
+        }
         // We would typically also track video lessons completion through a separate system
         // For now, we'll consider them not completed
         else {
@@ -120,9 +127,10 @@ export async function getCourseProgress(courseId: string, modules: any[]): Promi
     });
 
     // Calculate progress percentage
-    const progressPercentage = totalLessons > 0 
-      ? Math.round((completedLessons / totalLessons) * 100) 
-      : 0;
+    const progressPercentage =
+      totalLessons > 0
+        ? Math.round((completedLessons / totalLessons) * 100)
+        : 0;
 
     return {
       courseId,
@@ -141,7 +149,11 @@ export async function getCourseProgress(courseId: string, modules: any[]): Promi
 /**
  * Mark a video lesson as completed
  */
-export async function markLessonAsCompleted(lessonId: string, courseId: string, moduleId: string) {
+export async function markLessonAsCompleted(
+  lessonId: string,
+  courseId: string,
+  moduleId: string
+) {
   try {
     const session = await auth();
     const userId = session.userId;

@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Message, User } from "@/database";
-import { connectToDatabase } from "@/lib/db";
-import mongoose from "mongoose";
+import dbConnect from "@/lib/mongoose";
 
 // GET /api/chat/messages - Get messages for a user
 export async function GET(req: NextRequest) {
   try {
-    await connectToDatabase();
+    await dbConnect();
 
     // Get user ID from query parameter
     const url = new URL(req.url);
@@ -79,7 +78,7 @@ export async function GET(req: NextRequest) {
 // POST /api/chat/messages - Send a new message
 export async function POST(req: NextRequest) {
   try {
-    await connectToDatabase();
+    await dbConnect();
 
     // Get data from request body
     const body = await req.json();

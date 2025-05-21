@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { adminClient } from "@/sanity/lib/adminClient";
 import { client } from "@/sanity/lib/client";
 import { v4 as uuidv4 } from "uuid";
+import slugify from "slugify";
 
 // Define types for the form data
 interface LessonData {
@@ -32,14 +33,11 @@ interface CourseData {
 export async function createCourse(data: CourseData) {
   try {
     // Generate a slug from the title
-    const slug =
-      data.title
-        .toLowerCase()
-        .trim()
-        .replace(/[\s\W-]+/g, "-")
-        .replace(/^-+|-+$/g, "") +
-      "-" +
-      uuidv4().slice(0, 4);
+    const slug = `${slugify(data.title, {
+      lower: true,
+      trim: true,
+      locale: "vi",
+    })}-${uuidv4().slice(0, 4)}`;
 
     // Start a transaction
     const transaction = adminClient.transaction();
@@ -66,11 +64,11 @@ export async function createCourse(data: CourseData) {
           isPreview: lessonData.isPreview || false,
           slug: {
             _type: "slug",
-            current: `${slug}-${lessonData.title
-              .toLowerCase()
-              .trim()
-              .replace(/[\s\W-]+/g, "-")
-              .replace(/^-+|-+$/g, "")}`,
+            current: `${slugify(lessonData.title, {
+              lower: true,
+              trim: true,
+              locale: "vi",
+            })}-${uuidv4().slice(0, 4)}`,
           },
           lessonType: "video",
           videoUrl: lessonData.videoUrl || "",
@@ -91,11 +89,11 @@ export async function createCourse(data: CourseData) {
         title: moduleData.title,
         slug: {
           _type: "slug",
-          current: `${slug}-${moduleData.title
-            .toLowerCase()
-            .trim()
-            .replace(/[\s\W-]+/g, "-")
-            .replace(/^-+|-+$/g, "")}`,
+          current: `${slug}-${slugify(moduleData.title, {
+            lower: true,
+            trim: true,
+            locale: "vi",
+          })}-${uuidv4().slice(0, 4)}`,
         },
         lessons: lessonRefs,
       });

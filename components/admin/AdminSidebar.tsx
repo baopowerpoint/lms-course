@@ -10,7 +10,8 @@ import {
   LogOut,
   CreditCard,
   KeyIcon,
-  PlusCircle
+  PlusCircle,
+  MessageSquare
 } from "lucide-react";
 import { SignOutButton } from "@clerk/nextjs";
 
@@ -47,6 +48,11 @@ const AdminSidebar = () => {
       icon: PlusCircle,
       label: "Tạo khóa học nhanh",
       href: "/admin/course-creator",
+    },
+    {
+      icon: MessageSquare,
+      label: "Quản lý tin nhắn",
+      href: "/admin/chat",
     },
     {
       icon: KeyIcon,

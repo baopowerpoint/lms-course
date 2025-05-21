@@ -10,29 +10,19 @@ export const Footer = () => {
       title: "Sản phẩm",
       links: [
         { label: "Khoá học", href: "/courses" },
-        { label: "Dành cho giáo viên", href: "/for-teachers" },
-        { label: "Dành cho phụ huynh", href: "/for-parents" },
-        { label: "Dành cho trường học", href: "/for-schools" },
         { label: "Bảng giá", href: "/pricing" },
       ]
     },
     {
-      title: "Về chúng tôi",
+      title: "Hệ thống",
       links: [
-        { label: "Giới thiệu", href: "/about" },
-        { label: "Đội ngũ", href: "/team" },
-        { label: "Tuyển dụng", href: "/careers" },
-        { label: "Blog", href: "/blog" },
-        { label: "Liên hệ", href: "/contact" },
+        { label: "Khoá học của tôi", href: "/dashboard/courses" }
       ]
     },
     {
       title: "Hỗ trợ",
       links: [
-        { label: "Trung tâm trợ giúp", href: "/help" },
-        { label: "Câu hỏi thường gặp", href: "/faq" },
-        { label: "Điều khoản sử dụng", href: "/terms" },
-        { label: "Chính sách bảo mật", href: "/privacy" },
+        { label: "Câu hỏi thường gặp", href: "/faq" }
       ]
     }
   ];
@@ -90,14 +80,14 @@ export const Footer = () => {
             © {currentYear} Havamath. Đã đăng ký bản quyền.
           </p>
           <div className="flex space-x-6">
-            <Link href="/terms" className="text-sm text-gray-600 hover:text-primary">
-              Điều khoản
+            <Link href="/courses" className="text-sm text-gray-600 hover:text-primary">
+              Khoá học
             </Link>
-            <Link href="/privacy" className="text-sm text-gray-600 hover:text-primary">
-              Bảo mật
+            <Link href="/pricing" className="text-sm text-gray-600 hover:text-primary">
+              Bảng giá
             </Link>
-            <Link href="/cookies" className="text-sm text-gray-600 hover:text-primary">
-              Cookies
+            <Link href="/faq" className="text-sm text-gray-600 hover:text-primary">
+              FAQ
             </Link>
           </div>
         </div>

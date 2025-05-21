@@ -1,14 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Loader2, Plus, Trash2, BookOpen, FileText, Video } from "lucide-react";
+import {
+  Loader2,
+  Plus,
+  Trash2,
+  BookOpen,
+  FileText,
+  Video,
+  Upload,
+  Download,
+  FileJson,
+} from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
@@ -44,7 +63,11 @@ const lessonSchema = z.object({
   title: z.string().min(1, "Tiêu đề bài học là bắt buộc"),
   description: z.string().optional(),
   isPreview: z.boolean().default(false),
-  videoUrl: z.string().url("URL video không hợp lệ").optional().or(z.literal('')),
+  videoUrl: z
+    .string()
+    .url("URL video không hợp lệ")
+    .optional()
+    .or(z.literal("")),
 });
 
 const moduleSchema = z.object({
@@ -70,7 +93,11 @@ export default function CourseCreator() {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
   const [authors, setAuthors] = useState<any[]>([]);
-  
+  const [jsonDialogOpen, setJsonDialogOpen] = useState(false);
+  const [jsonInput, setJsonInput] = useState("");
+  const [jsonError, setJsonError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // Initialize the form
   const form = useForm<TFieldValues>({
     resolver: zodResolver(formSchema) as any,
@@ -84,28 +111,85 @@ export default function CourseCreator() {
       modules: [
         {
           title: "Module 1",
-          lessons: [{ title: "", description: "", isPreview: false, videoUrl: "" }],
+          lessons: [
+            { title: "", description: "", isPreview: false, videoUrl: "" },
+          ],
         },
       ],
     },
   });
 
+  // Handle JSON import via file
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const json = JSON.parse(e.target?.result as string);
+        setJsonInput(JSON.stringify(json, null, 2));
+        setJsonError("");
+      } catch (error) {
+        console.error("Error parsing JSON file:", error);
+        setJsonError("File không đúng định dạng JSON");
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Handle JSON import
+  const handleImportJson = () => {
+    try {
+      setJsonError("");
+      const jsonData = JSON.parse(jsonInput);
+
+      // Validate the basic structure
+      if (
+        !jsonData.title ||
+        !jsonData.description ||
+        jsonData.modules?.length === undefined
+      ) {
+        setJsonError("JSON không đúng cấu trúc. Thiếu các trường bắt buộc.");
+        return;
+      }
+
+      // Process tags if they're in string format
+      let processedData = { ...jsonData };
+      if (typeof jsonData.tags === "string") {
+        processedData.tags = jsonData.tags;
+      } else if (Array.isArray(jsonData.tags)) {
+        processedData.tags = jsonData.tags.join(", ");
+      }
+
+      // Reset form with the imported data
+      form.reset(processedData);
+
+      // Close dialog
+      setJsonDialogOpen(false);
+      toast.success("Đã nhập dữ liệu thành công!");
+    } catch (error) {
+      console.error("Error importing JSON:", error);
+      setJsonError("JSON không hợp lệ. Vui lòng kiểm tra lại định dạng.");
+    }
+  };
+
   // Fetch categories and authors from Sanity when component mounts
-  useState(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch categories and authors in parallel
         const [categoriesResult, authorsResult] = await Promise.all([
-          fetch('/api/sanity/categories'),
-          fetch('/api/sanity/authors')
+          fetch("/api/sanity/categories"),
+          fetch("/api/sanity/authors"),
         ]);
-        
-        if (!categoriesResult.ok) throw new Error('Không thể tải danh mục');
-        if (!authorsResult.ok) throw new Error('Không thể tải giảng viên');
-        
+
+        if (!categoriesResult.ok) throw new Error("Không thể tải danh mục");
+        if (!authorsResult.ok) throw new Error("Không thể tải giảng viên");
+
         const categoriesData = await categoriesResult.json();
         const authorsData = await authorsResult.json();
-        
+
         if (categoriesData.success) setCategories(categoriesData.data);
         if (authorsData.success) setAuthors(authorsData.data);
       } catch (error) {
@@ -120,20 +204,22 @@ export default function CourseCreator() {
   // Handle form submission
   const onSubmit = async (values: TFieldValues) => {
     setIsLoading(true);
-    
+
     try {
       // Process tags from comma-separated string to array
-      const tagsArray = values.tags ? values.tags.split(",").map(tag => tag.trim()) : [];
-      
+      const tagsArray = values.tags
+        ? values.tags.split(",").map((tag) => tag.trim())
+        : [];
+
       // Prepare the course data
       const courseData = {
         ...values,
         tags: tagsArray,
       };
-      
+
       // Send data to server action
       const result = await createCourse(courseData);
-      
+
       if (result.success) {
         toast.success("Khóa học đã được tạo thành công!");
         router.push("/admin/courses");
@@ -155,7 +241,9 @@ export default function CourseCreator() {
       ...currentModules,
       {
         title: `Module ${currentModules.length + 1}`,
-        lessons: [{ title: "", description: "", isPreview: false, videoUrl: "" }],
+        lessons: [
+          { title: "", description: "", isPreview: false, videoUrl: "" },
+        ],
       },
     ]);
   };
@@ -213,10 +301,83 @@ export default function CourseCreator() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="flex justify-between items-center mb-4">
+          <Link
+            href="/admin/course-creator/sample/course-template.json"
+            target="_blank"
+            className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
+          >
+            <Download className="h-4 w-4 mr-1" />
+            Tải mẫu JSON
+          </Link>
+
+          <Dialog open={jsonDialogOpen} onOpenChange={setJsonDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2">
+                <FileJson className="h-4 w-4" />
+                Nhập từ JSON
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-3xl">
+              <DialogHeader>
+                <DialogTitle>Nhập dữ liệu từ JSON</DialogTitle>
+                <DialogDescription>
+                  Dán dữ liệu JSON hoặc tải lên file để điền nhanh thông tin
+                  khóa học.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <p className="text-sm text-muted-foreground">
+                    Dán JSON hoặc tải lên file:
+                  </p>
+                  <div>
+                    <input
+                      placeholder="Chọn file JSON"
+                      type="file"
+                      accept=".json"
+                      ref={fileInputRef}
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="flex items-center gap-1"
+                    >
+                      <Upload className="h-3 w-3" /> Tải file
+                    </Button>
+                  </div>
+                </div>
+                <textarea
+                  rows={15}
+                  className="w-full p-3 border rounded-md font-mono text-sm"
+                  value={jsonInput}
+                  onChange={(e) => setJsonInput(e.target.value)}
+                  placeholder='{\n  "title": "Tên khóa học",\n  "description": "Mô tả khóa học",\n  "price": 299000,\n  "modules": [...]\n}'
+                />
+                {jsonError && (
+                  <p className="text-sm text-red-500">{jsonError}</p>
+                )}
+                <div className="flex justify-end">
+                  <Button onClick={handleImportJson} className="gap-2">
+                    <FileJson className="h-4 w-4" />
+                    Áp dụng JSON
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+
         <Card>
           <CardHeader>
             <CardTitle>Thông tin khóa học</CardTitle>
-            <CardDescription>Nhập các thông tin cơ bản cho khóa học</CardDescription>
+            <CardDescription>
+              Nhập các thông tin cơ bản cho khóa học
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <FormField
@@ -450,10 +611,7 @@ export default function CourseCreator() {
                             <FormItem>
                               <FormLabel>Tên bài học</FormLabel>
                               <FormControl>
-                                <Input
-                                  placeholder="Tên bài học"
-                                  {...field}
-                                />
+                                <Input placeholder="Tên bài học" {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -513,7 +671,8 @@ export default function CourseCreator() {
                                 <div className="space-y-1 leading-none">
                                   <FormLabel>Bài học miễn phí</FormLabel>
                                   <FormDescription>
-                                    Người dùng có thể xem ngay cả khi chưa mua khóa học
+                                    Người dùng có thể xem ngay cả khi chưa mua
+                                    khóa học
                                   </FormDescription>
                                 </div>
                               </FormItem>

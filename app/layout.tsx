@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { viVN } from "@clerk/localizations";
 import Providers from "@/components/providers/query";
 import NextTopLoader from "nextjs-toploader";
+import { ClientLayout } from "@/components/layouts/ClientLayout";
 const quicksand = Quicksand({
   subsets: ["latin"],
 });
@@ -29,7 +30,9 @@ export default function RootLayout({
             height={3}
             shadow="0 0 10px #10b981,0 0 5px #10b981"
           />
-          <Providers>{children}</Providers>
+          <Providers>
+            <ClientLayout>{children}</ClientLayout>
+          </Providers>
         </body>
       </html>
     </ClerkProvider>

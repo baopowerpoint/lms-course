@@ -142,11 +142,9 @@ export async function getCourses(params?: {
   category?: string;
   page?: number;
   limit?: number;
+  forAdmin?: boolean;
 }): Promise<Course[]> {
-  const { query = "", category = "", page = 1, limit = 8 } = params || {};
-
-  // Calculate pagination
-  const offset = (page - 1) * limit;
+  const { query = "", category = "", page = 1, limit = 8, forAdmin = false } = params || {};
 
   // Build filters
   let filters = [];
@@ -161,10 +159,18 @@ export async function getCourses(params?: {
   }
 
   const filterString = filters.length > 0 ? `&& ${filters.join(" && ")}` : "";
+  
+  // Determine if we should use pagination
+  let paginationString = "";
+  if (!forAdmin) {
+    // Calculate pagination for non-admin pages
+    const offset = (page - 1) * limit;
+    paginationString = `[${offset}...${offset + limit}]`;
+  }
 
   // Build the GROQ query
   const queryGroq = groq`
-    *[_type == "course" ${filterString}] | order(_createdAt desc) [${offset}...${offset + limit}] {
+    *[_type == "course" ${filterString}] | order(_createdAt desc) ${paginationString} {
       _id,
       title,
       "slug": slug.current,

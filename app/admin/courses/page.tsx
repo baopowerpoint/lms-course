@@ -28,8 +28,8 @@ async function getCourseEnrollments() {
 }
 
 export default async function AdminCoursesPage() {
-  // Fetch courses from Sanity
-  const courses = await getCourses();
+  // Fetch all courses from Sanity without pagination for admin display
+  const courses = await getCourses({ forAdmin: true });
   
   // Get enrollment statistics from MongoDB
   const enrollmentMap = await getCourseEnrollments();

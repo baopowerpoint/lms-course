@@ -1,0 +1,535 @@
+{
+  "title": "Khóa học toán học cơ bản",
+  "description": "Khóa học này giúp học sinh nắm vững các khái niệm cơ bản về đại số và toán học",
+  "price": 299000,
+  "tags": "toán học, đại số, phương trình, học cơ bản",
+  "modules": [
+    {
+      "title": "Bài 1: Chân dung của em",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Tuổi Ngựa (trang 5, 6)",
+          "videoUrl": "https://youtu.be/dyGMeWUjV8k"
+        },
+        {
+          "title": "Tự đọc sách báo (trang 7)",
+          "videoUrl": "https://youtu.be/k_r_ooElSk8"
+        },
+        {
+          "title": "Viết: Viết đoạn văn về một nhân vật (trang 7, 8)",
+          "videoUrl": "https://youtu.be/h6HVgVFRjL0"
+        },
+        {
+          "title": "Nói và nghe: Kể chuyện: Làm chị (trang 8, 9)",
+          "videoUrl": "https://youtu.be/Hc1n1o_jHR4"
+        },
+        {
+          "title": "Đọc: Cái răng khểnh (trang 9, 10)",
+          "videoUrl": "https://youtu.be/h7XjrncXXKE"
+        },
+        {
+          "title": "Luyện từ và câu: Danh từ (trang 10, 11)",
+          "videoUrl": "https://youtu.be/R5REKMYbZ10"
+        },
+        {
+          "title": "Luyện Tập Viết Đoạn Văn Về 1 Nhân Vật + Vệt Phấn Trên Mặt Bàn",
+          "videoUrl": "https://youtu.be/acn-RkRRNKA"
+        },
+        {
+          "title": "Nói và nghe: Trao đổi: Chân dung của em, của bạn (trang 13, 14)",
+          "videoUrl": "https://youtu.be/2sbxTn4DtGQ"
+        },
+        {
+          "title": "Đọc: Những vết đinh (trang 14, 15)",
+          "videoUrl": "https://youtu.be/ZQpVw3sSjvE"
+        },
+        {
+          "title": "Luyện từ và câu: Dấu gạch ngang (trang 15, 16)",
+          "videoUrl": "https://youtu.be/pNG9Ajx4DPc"
+        },
+        {
+          "title": "Góc sáng tạo: Em tuổi gì? (trang 16)",
+          "videoUrl": "https://youtu.be/jHdcBhDDilA"
+        },
+        {
+          "title": "Tự đánh giá (trang 17, 18)",
+          "videoUrl": "https://youtu.be/XJSeahspk5s"
+        }
+      ]
+    },
+    {
+      "title": "Bài 2: Chăm học, chăm làm",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Văn hay chữ tốt (trang 19, 20, 21)",
+          "videoUrl": "https://youtu.be/U0Eub8W7lSw"
+        },
+        {
+          "title": "Tự đọc sách báo (trang 21)",
+          "videoUrl": "https://youtu.be/lwGwBqOV8jY"
+        },
+        {
+          "title": "Đọc: Lên rẫy (trang 24)",
+          "videoUrl": "https://youtu.be/N6TeHT1dt_c"
+        },
+        {
+          "title": "Luyện từ và câu: Danh từ chung, danh từ riêng (trang 25)",
+          "videoUrl": "https://youtu.be/TmDXBYB4g4E"
+        },
+        {
+          "title": "Đọc: Cô giáo nhỏ (trang 26, 27)",
+          "videoUrl": "https://youtu.be/tjC8iCFwd_U"
+        },
+        {
+          "title": "Nói và nghe: Trao đổi: Chăm học, chăm làm (trang 28)",
+          "videoUrl": "https://youtu.be/ZuIjFq2mBuY"
+        },
+        {
+          "title": "Đọc: Bài văn tả cảnh (trang 29, 30)",
+          "videoUrl": "https://youtu.be/0UdtlNTzljk"
+        },
+        {
+          "title": "Luyện từ và câu: Luyện tập về danh từ (trang 30)",
+          "videoUrl": "https://youtu.be/HlwEdywNmG4"
+        },
+        {
+          "title": "Góc sáng tạo: Đố vui: Ai chăm, ai ngoan (trang 31)",
+          "videoUrl": "https://youtu.be/QWoKbF2esA4"
+        }
+      ]
+    },
+    {
+      "title": "Bài 3: Như măng mọc thẳng",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Cau (trang 33, 34, 35)",
+          "videoUrl": "https://youtu.be/HW1EhYQCjxs"
+        },
+        {
+          "title": "Đọc: Một người chính trực (trang 38, 39)",
+          "videoUrl": "https://youtu.be/D_HiP63nz_U"
+        },
+        {
+          "title": "Luyện từ và câu: Nhân hóa (trang 39, 40)",
+          "videoUrl": "https://youtu.be/Rpa2sxErV2Q"
+        },
+        {
+          "title": "Viết: Luyện tập tả cây cối (trang 41)",
+          "videoUrl": "https://youtu.be/AMbBZG2hcCg"
+        },
+        {
+          "title": "Đọc: Những chú bé giàu trí tưởng tượng (trang 44, 45)",
+          "videoUrl": "https://youtu.be/3blisly2pis"
+        },
+        {
+          "title": "Luyện từ và câu: Luyện tập về nhân hóa (trang 46, 47)",
+          "videoUrl": "https://youtu.be/-987m-txySI"
+        }
+      ]
+    },
+    {
+      "title": "Bài 5: Ôn tập giữa học kì I",
+      "lessons": [
+        {
+          "title": "Tiết 1, 2, 3",
+          "videoUrl": "https://youtu.be/ne899QPQTeY"
+        },
+        {
+          "title": "Tiết 4, 5",
+          "videoUrl": "https://youtu.be/bcx8Wp2LrcA"
+        },
+        {
+          "title": "Tiết 6, 7 (trang 67, 68)",
+          "videoUrl": "https://youtu.be/TNMqx0djpNw"
+        }
+      ]
+    },
+    {
+      "title": "Bài 6: Ước mơ của em",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Ở Vương quốc Tương Lai (trang 70, 71)",
+          "videoUrl": "https://youtu.be/Mgv4SZPFGKE"
+        },
+        {
+          "title": "Đọc: Nếu chúng mình có phép lạ (trang 76, 77)",
+          "videoUrl": "https://youtu.be/9fcIZrAhXdk"
+        },
+        {
+          "title": "Đọc: Theo đuổi ước mơ (trang 79, 80)",
+          "videoUrl": "https://youtu.be/Wd2UgbFEMcw"
+        }
+      ]
+    },
+    {
+      "title": "Bài 7: Họ hàng, làng xóm",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Người cô của bé Hương (trang 86, 87)",
+          "videoUrl": "https://youtu.be/gGZJnBx37ms"
+        },
+        {
+          "title": "Đọc: Kỉ niệm xưa (trang 89, 90)",
+          "videoUrl": "https://youtu.be/cleRaDRjApM"
+        },
+        {
+          "title": "Luyện từ và câu: Tính từ (trang 90, 91)",
+          "videoUrl": "https://youtu.be/mRRjom7GLs8"
+        },
+        {
+          "title": "Đọc: Mảnh sân chung (trang 92, 93, 94)",
+          "videoUrl": "https://youtu.be/by6Z0u9lLIM"
+        },
+        {
+          "title": "Đọc: Anh đom đóm (trang 95, 96)",
+          "videoUrl": "https://youtu.be/YpPVYZyVgFQ"
+        }
+      ]
+    },
+    {
+      "title": "Bài 8: Người ta là hoa đất",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Ông Yết Kiêu (trang 100, 101, 102)",
+          "videoUrl": "https://youtu.be/lVeqiuOheJI"
+        },
+        {
+          "title": "Đọc: Nhà bác học của đồng ruộng (trang 104, 105)",
+          "videoUrl": "https://youtu.be/SvsKcUuATe8"
+        },
+        {
+          "title": "Luyện từ và câu: Câu chủ đề của đoạn văn (trang 105, 106)",
+          "videoUrl": "https://youtu.be/r6bHZVqgHQE"
+        },
+        {
+          "title": "Viết: Luyện tập viết đoạn văn về một câu chuyện em thích (trang 107)",
+          "videoUrl": "https://youtu.be/ytjcUHXDS5U"
+        },
+        {
+          "title": "Đọc: Ba nàng công chúa (trang 108, 109)",
+          "videoUrl": "https://youtu.be/tvT5UoI_rtY"
+        },
+        {
+          "title": "Đọc: Tôn vinh sáng tạo (trang 110, 111)",
+          "videoUrl": "https://youtu.be/-W21dXG2t7Y"
+        }
+      ]
+    },
+    {
+      "title": "Bài 9: Tài sản vô giá",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Đón Thần Mặt Trời (trang 115, 116, 117)",
+          "videoUrl": "https://youtu.be/heZ6dqCNPrA"
+        },
+        {
+          "title": "Đọc: Để học tập tốt (trang 119, 120)",
+          "videoUrl": "https://youtu.be/Z0FUpCKgdPs"
+        },
+        {
+          "title": "Đọc: Chọn đường (trang 123, 124, 125)",
+          "videoUrl": "https://youtu.be/3oJKTVs39cA"
+        },
+        {
+          "title": "Đọc: Buổi sáng đi học (trang 126, 127)",
+          "videoUrl": "https://youtu.be/TEWgRG_UmOU"
+        }
+      ]
+    },
+    {
+      "title": "Bài 10: Ôn tập cuối học kì I",
+      "lessons": [
+        {
+          "title": "Ôn tập cuối học kì I",
+          "videoUrl": "https://youtu.be/c_q0qD9evmU"
+        }
+      ]
+    },
+    {
+      "title": "Bài 11: Trái tim yêu thương",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Món quà (trang 3, 4, 5)",
+          "videoUrl": "https://youtu.be/7W7rucJrEhI"
+        },
+        {
+          "title": "Đọc: Buổi học cuối cùng (trang 6, 7)",
+          "videoUrl": "https://youtu.be/FnuMsKVQkkg"
+        },
+        {
+          "title": "Luyện từ và câu: Tra từ điển (trang 7, 8)",
+          "videoUrl": "https://youtu.be/6pp028Rj6mM"
+        },
+        {
+          "title": "Viết: Luyện tập viết thư thăm hỏi (trang 8)",
+          "videoUrl": "https://youtu.be/tgExF99CBq0"
+        },
+        {
+          "title": "Đọc: Những hạt gạo ân tình (trang 9, 10)",
+          "videoUrl": "https://youtu.be/4qI0i7Ik39g"
+        },
+        {
+          "title": "Viết: Luyện tập viết thư thăm hỏi (trang 10)",
+          "videoUrl": "https://youtu.be/utryFHDuhd4"
+        },
+        {
+          "title": "Đọc: Con sóng lan xa (trang 12, 13)",
+          "videoUrl": "https://youtu.be/yyZM58xK660"
+        },
+        {
+          "title": "Luyện từ và câu: Vị ngữ (trang 13, 14)",
+          "videoUrl": "https://youtu.be/ZRthWO_G5Qw"
+        }
+      ]
+    },
+    {
+      "title": "Bài 13: Niềm vui lao động",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Đàn bò gặm cỏ (trang 33, 34, 35)",
+          "videoUrl": "https://youtu.be/8pOxbDjkaNM"
+        },
+        {
+          "title": "Đọc: Người giàn khoan (trang 37, 38)",
+          "videoUrl": "https://youtu.be/w5QwKceq5N8"
+        },
+        {
+          "title": "Luyện từ và câu: Dấu gạch ngang (trang 38, 39)",
+          "videoUrl": "https://youtu.be/A0DnX9zKxls"
+        },
+        {
+          "title": "Viết: Luyện tập tả con vật (trang 39, 40)",
+          "videoUrl": "https://youtu.be/e3yxBOU7wxE"
+        },
+        {
+          "title": "Đọc: Đoàn thuyền đánh cá (trang 40, 41)",
+          "videoUrl": "https://youtu.be/a7gC5Y8pfww"
+        },
+        {
+          "title": "Viết: Luyện tập tả con vật (trang 41, 42)",
+          "videoUrl": "https://youtu.be/Js4lNkCBJfY"
+        },
+        {
+          "title": "Đọc: Có thể bạn đã biết (trang 43, 44)",
+          "videoUrl": "https://youtu.be/mFnxMsL-Lg4"
+        },
+        {
+          "title": "Luyện từ và câu: Dấu ngoặc đơn (trang 44, 45)",
+          "videoUrl": "https://youtu.be/NhPpPPHDJ74"
+        }
+      ]
+    },
+    {
+      "title": "Bài 14: Bài ca giữ nước",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Ngô Quyền đại phá quân Nam Hán (trang 48, 49, 50)",
+          "videoUrl": "https://youtu.be/r8nPBtdRIJY"
+        },
+        {
+          "title": "Viết: Luyện tập tả con vật (trang 51)",
+          "videoUrl": "https://youtu.be/CquRhJ8SJUg"
+        },
+        {
+          "title": "Đọc: Mít tinh mừng độc lập (trang 53, 54)",
+          "videoUrl": "https://youtu.be/VBm26P7wZRk"
+        },
+        {
+          "title": "Luyện từ và câu: Trạng ngữ (trang 54, 55)",
+          "videoUrl": "https://youtu.be/aGQoeooHwvc"
+        },
+        {
+          "title": "Viết: Luyện tập tả con vật (trang 56)",
+          "videoUrl": "https://youtu.be/mjfPZit5goM"
+        },
+        {
+          "title": "Đọc: Bức ảnh (trang 57, 58)",
+          "videoUrl": "https://youtu.be/iNO4d2JLATk"
+        },
+        {
+          "title": "Viết: Luyện tập tả con vật (trang 58)",
+          "videoUrl": "https://youtu.be/U3ToNb_q8lM"
+        },
+        {
+          "title": "Đọc: Trường Sa (trang 59, 60)",
+          "videoUrl": "https://youtu.be/GU5_PzEymvc"
+        },
+        {
+          "title": "Luyện từ và câu: Luyện tập về trạng ngữ (trang 60, 61)",
+          "videoUrl": "https://youtu.be/KdYwQyH71ro"
+        },
+        {
+          "title": "Góc sáng tạo: Những trang sử vàng (trang 61)",
+          "videoUrl": "https://youtu.be/TtRRr3XLWr0"
+        }
+      ]
+    },
+    {
+      "title": "Bài 15: Ôn tập giữa học kì 2",
+      "lessons": [
+        {
+          "title": "Tiết 1, 2, 3",
+          "videoUrl": "https://youtu.be/l1cyTCC_IGo"
+        },
+        {
+          "title": "Tiết 4, 5",
+          "videoUrl": "https://youtu.be/rgsFeDPaO6Y"
+        }
+      ]
+    },
+    {
+      "title": "Bài 16: Tuổi nhỏ chí lớn",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Chiến công của những du kích nhỏ (trang 70, 71, 72)",
+          "videoUrl": "https://youtu.be/RaL1ULIJP_c"
+        },
+        {
+          "title": "Viết: Viết báo cáo (trang 73, 74)",
+          "videoUrl": "https://youtu.be/677DiWxQ8pE"
+        },
+        {
+          "title": "Đọc: Em bé Bảo Ninh (trang 75, 76)",
+          "videoUrl": "https://youtu.be/UbwUw38kW9I"
+        },
+        {
+          "title": "Viết: Luyện tập viết báo cáo (trang 77)",
+          "videoUrl": "https://youtu.be/pCD_GgSaNts"
+        },
+        {
+          "title": "Viết: Viết hướng dẫn thực hiện một số công việc (trang 79, 80)",
+          "videoUrl": "https://youtu.be/nrhyZVK86XM"
+        },
+        {
+          "title": "Đọc: Mùa xuân em đi trồng cây (trang 81, 82)",
+          "videoUrl": "https://youtu.be/HFFhgr99nPE"
+        }
+      ]
+    },
+    {
+      "title": "Bài 17: Khám phá thế giới",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Chẳng phải chuyện đùa (trang 86, 87, 88)",
+          "videoUrl": "https://youtu.be/EIs9J9vM9wI"
+        },
+        {
+          "title": "Đọc: Đường đi Sa Pa (trang 90, 91)",
+          "videoUrl": "https://youtu.be/NvUs_krD2qQ"
+        },
+        {
+          "title": "Luyện từ và câu: Luyện tập về lựa chọn từ ngữ (trang 91, 92)",
+          "videoUrl": "https://youtu.be/wRn2MbClpSA"
+        },
+        {
+          "title": "Đọc: Ngọn đuốc trong đêm (trang 93, 94)",
+          "videoUrl": "https://youtu.be/8CjMPX0hEAs"
+        },
+        {
+          "title": "Viết: Viết hướng dẫn sử dụng một sản phẩm (trang 94)",
+          "videoUrl": "https://youtu.be/vyK_jqL-fIM"
+        },
+        {
+          "title": "Luyện từ và câu: Mở rộng vốn từ: du lịch (trang 97)",
+          "videoUrl": "https://youtu.be/3qGxD6vs4a4"
+        }
+      ]
+    },
+    {
+      "title": "Bài 18: Vì cuộc sống con người",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Chuyện cổ tích về loài người (trang 100, 101, 102)",
+          "videoUrl": "https://youtu.be/AypcgbOOS2M"
+        },
+        {
+          "title": "Đọc: Sáng tạo vì cuộc sống (trang 105, 106)",
+          "videoUrl": "https://youtu.be/31_MfI3lGcs"
+        },
+        {
+          "title": "Đọc: Nhà bác học Niu-tơn (trang 107, 108)",
+          "videoUrl": "https://youtu.be/h6Zlhad5NpQ"
+        },
+        {
+          "title": "Đọc: Vòng quanh trái đất (trang 111, 112)",
+          "videoUrl": "https://youtu.be/EA30SGCXq_U"
+        },
+        {
+          "title": "Đọc: Nụ cười Ga-ga-rin (trang 113, 114)",
+          "videoUrl": "https://youtu.be/qAyIauBLTG0"
+        },
+        {
+          "title": "Đọc: Một trí tuệ Việt Nam (trang 116, 117)",
+          "videoUrl": "https://youtu.be/SCphUtnoe_k"
+        }
+      ]
+    },
+    {
+      "title": "Bài 19: Ôn tập cuối năm học",
+      "lessons": [
+        {
+          "title": "Ôn tập cuối năm học",
+          "videoUrl": "https://youtu.be/y3lhD-BKLZI"
+        }
+      ]
+    },
+    {
+      "title": "Bài 4: Kho báu của em",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Những thư viện đặc biệt (trang 50, 51, 52)",
+          "videoUrl": "https://youtu.be/cbJc2Kl7jc8"
+        },
+        {
+          "title": "Đọc: Những trang sách tuổi thơ (trang 54, 55)",
+          "videoUrl": "https://youtu.be/g5torAuABf0"
+        },
+        {
+          "title": "Viết: Luyện tập tả cây cối (trang 56, 57)",
+          "videoUrl": "https://youtu.be/QTYhk_N-Zwg"
+        },
+        {
+          "title": "Đọc: Người thu gió (trang 57, 58)",
+          "videoUrl": "https://youtu.be/KxWpBLIXwSg"
+        },
+        {
+          "title": "Viết: Luyện tập tả cây cối (trang 58, 59)",
+          "videoUrl": "https://youtu.be/Ofuv6NLLFnQ"
+        },
+        {
+          "title": "Đọc: Mỗi lần cầm sách giáo khoa (trang 59, 60)",
+          "videoUrl": "https://youtu.be/mRavoEhVFkY"
+        },
+        {
+          "title": "Luyện từ và câu: Mở rộng vốn từ: Sách và thư viện (trang 60, 61)",
+          "videoUrl": "https://youtu.be/TIQ3XLlsvT0"
+        }
+      ]
+    },
+    {
+      "title": "Bài 12: Những người dũng cảm",
+      "lessons": [
+        {
+          "title": "Chia sẻ và đọc: Bài thơ về tiểu đội xe không kính (trang 17, 18, 19)",
+          "videoUrl": "https://youtu.be/Wq8o2e5lAlY"
+        },
+        {
+          "title": "Viết: Tả con vật (trang 19, 20, 21)",
+          "videoUrl": "https://youtu.be/-5t8b5tG3HQ"
+        },
+        {
+          "title": "Luyện từ và câu: Luyện tập về vị ngữ (trang 23)",
+          "videoUrl": "https://youtu.be/7wz1I6RHLDk"
+        },
+        {
+          "title": "Đọc: Người lính dũng cảm (trang 28, 29)",
+          "videoUrl": "https://youtu.be/3bWA2gGfC9c"
+        },
+        {
+          "title": "Đọc: Sự thật là thước đo chân lí (trang 24, 25, 26)",
+          "videoUrl": "https://youtu.be/d6wxNCVk7O0"
+        }
+      ]
+    }
+  ]
+}

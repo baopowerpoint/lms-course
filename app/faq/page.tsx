@@ -35,6 +35,11 @@ export default function FAQPage() {
         answer: "Havamath là nền tảng học toán trực tuyến giúp học sinh khám phá niềm vui trong học toán với phương pháp học tập tương tác và cá nhân hoá. Chúng tôi cung cấp các khoá học chất lượng cao được thiết kế bởi các giáo viên có kinh nghiệm, giúp học sinh tiến bộ mỗi ngày."
       },
       {
+        id: "hellohava-courses",
+        question: "Hellohava là khoá học online nào?",
+        answer: "Hellohava là nền tảng giáo dục trực tuyến cung cấp các khoá học toán học từ cơ bản đến nâng cao. Chúng tôi chuyên về các khoá học toán học với nội dung tương tác cao, video bài giảng, bài tập thực hành và hệ thống đánh giá tự động. Khoá học của chúng tôi được thiết kế để phù hợp với chương trình giáo dục Việt Nam, giúp học sinh củng cố kiến thức nền tảng và phát triển tư duy logic."
+      },
+      {
         id: "who-can-use",
         question: "Ai có thể sử dụng Havamath?",
         answer: "Havamath phù hợp với mọi đối tượng học sinh từ tiểu học đến trung học phổ thông, cũng như người học muốn củng cố kiến thức nền tảng toán học. Nền tảng của chúng tôi được thiết kế để phù hợp với nhiều cấp độ học tập khác nhau."
@@ -45,12 +50,22 @@ export default function FAQPage() {
         answer: "Học tập tại Havamath mang lại nhiều lợi ích như: Tiếp cận nội dung học tập chất lượng cao, học theo tốc độ riêng, nhận phản hồi tức thì, theo dõi tiến độ học tập, tương tác với cộng đồng học viên và giáo viên, và nhận chứng chỉ hoàn thành khi kết thúc khoá học."
       },
       {
+        id: "hellohava-benefits",
+        question: "Ưu điểm khi học tập cùng trang web Hellohava",
+        answer: "Học tập cùng Hellohava mang lại nhiều ưu điểm vượt trội: (1) Phương pháp học cá nhân hoá thông qua AI, tự động điều chỉnh theo trình độ của từng học viên; (2) Nội dung bài giảng được thiết kế kỹ lưỡng với hàng ngàn bài tập chất lượng; (3) Giao diện trực quan, dễ sử dụng, phù hợp với mọi độ tuổi; (4) Tư duy học tập độc đáo kết hợp giữa lý thuyết và thực hành; (5) Hệ thống hỗ trợ 24/7 từ đội ngũ giáo viên giàu kinh nghiệm."
+      },
+      {
         id: "get-started",
         question: "Làm thế nào để bắt đầu với Havamath?",
         answer: "Để bắt đầu, bạn chỉ cần đăng ký tài khoản miễn phí, khám phá các khoá học có sẵn, và đăng ký khoá học phù hợp với nhu cầu của bạn. Sau khi đăng ký, bạn có thể bắt đầu học ngay lập tức trên máy tính, máy tính bảng hoặc điện thoại di động."
       },
     ],
     courses: [
+      {
+        id: "age-range",
+        question: "Khoá học online Hellohava dành cho độ tuổi nào?",
+        answer: "Khoá học online Hellohava được thiết kế phù hợp cho học sinh từ lớp 1 đến lớp 12 (6-18 tuổi). Chúng tôi có các khoá học được phân chia theo cấp độ và độ tuổi, bao gồm: Tiểu học (6-10 tuổi), THCS (11-14 tuổi), và THPT (15-18 tuổi). Mỗi khoá học được thiết kế với ngôn ngữ, giao diện và nội dung phù hợp với từng độ tuổi, giúp học sinh dễ dàng tiếp thu kiến thức một cách hiệu quả."
+      },
       {
         id: "courses-available",
         question: "Havamath cung cấp những khoá học nào?",
@@ -99,6 +114,11 @@ export default function FAQPage() {
         id: "account-creation",
         question: "Làm thế nào để tạo tài khoản Havamath?",
         answer: "Bạn có thể tạo tài khoản bằng cách nhấp vào nút 'Đăng ký' trên trang chủ, điền thông tin cá nhân của bạn, xác nhận email, và thiết lập mật khẩu. Bạn cũng có thể đăng ký bằng tài khoản Google hoặc Facebook để đơn giản hoá quy trình."
+      },
+      {
+        id: "login-process",
+        question: "Đăng nhập vào trang web thế nào",
+        answer: "Để đăng nhập vào Hellohava, bạn có thể thực hiện theo các bước sau: (1) Truy cập trang web Hellohava.com; (2) Nhấp vào nút 'Đăng nhập' ở góc trên bên phải màn hình; (3) Nhập địa chỉ email và mật khẩu đã đăng ký; (4) Hoặc bạn có thể chọn đăng nhập nhanh bằng tài khoản Google, Facebook hoặc Apple ID. Nếu gặp khó khăn khi đăng nhập, hãy sử dụng tính năng 'Quên mật khẩu' hoặc liên hệ với đội ngũ hỗ trợ của chúng tôi."
       },
       {
         id: "password-reset",

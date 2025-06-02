@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import { Schema, Document, Model, models, model } from "mongoose";
 
 export interface IMessage extends Document {
   content: string;
@@ -37,7 +37,7 @@ const MessageSchema = new Schema(
 MessageSchema.index({ senderId: 1, receiverId: 1 });
 
 // Check if model already exists to prevent OverwriteModelError during hot reloads
-const Message = (mongoose.models.Message ||
-  mongoose.model<IMessage>("Message", MessageSchema)) as Model<IMessage>;
+const Message = (models?.Message ||
+  model<IMessage>("Message", MessageSchema)) as Model<IMessage>;
 
 export default Message;

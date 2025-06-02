@@ -5,5 +5,15 @@ import QuizAttempt from "./quizAttempt.model";
 import Payment from "./payment.model";
 import RedemptionCode from "./redemption-code.model";
 import Message from "./message.model";
+import Test from "./test.model";
 
-export { User, Order, Enrollment, QuizAttempt, Payment, RedemptionCode, Message };
+export {
+  User,
+  Order,
+  Enrollment,
+  QuizAttempt,
+  Payment,
+  RedemptionCode,
+  Message,
+  Test,
+};

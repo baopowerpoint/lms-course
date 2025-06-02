@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
-import { ExternalLink, BookOpen, Eye } from "lucide-react";
+import { ExternalLink, BookOpen, Eye, Edit } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { ProgressBar } from "@/components/ui/progress-bar";
@@ -135,6 +135,12 @@ export default function AdminCoursesTable({ courses, enrollmentMap }: AdminCours
                       <Link href={`/courses/${course.slug}`} target="_blank">
                         <Eye className="h-4 w-4" />
                         <span className="sr-only">Xem khóa học</span>
+                      </Link>
+                    </Button>
+                    <Button size="sm" variant="ghost" asChild>
+                      <Link href={`/admin/course-creator/${course._id}/edit`}>
+                        <Edit className="h-4 w-4" />
+                        <span className="sr-only">Chỉnh sửa khóa học</span>
                       </Link>
                     </Button>
                     <Button 

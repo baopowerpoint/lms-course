@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import { Document, Schema, model, models } from "mongoose";
 
 export interface IQuizAttempt extends Document {
   userId: string;
@@ -63,7 +63,6 @@ const QuizAttemptSchema = new Schema<IQuizAttempt>(
 QuizAttemptSchema.index({ userId: 1, courseId: 1, lessonId: 1 });
 
 const QuizAttempt =
-  mongoose.models.QuizAttempt ||
-  mongoose.model<IQuizAttempt>("QuizAttempt", QuizAttemptSchema);
+  models?.QuizAttempt || model<IQuizAttempt>("QuizAttempt", QuizAttemptSchema);
 
 export default QuizAttempt;

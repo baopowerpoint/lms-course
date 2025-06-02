@@ -8,15 +8,17 @@ import { User as UserModel } from "@/database";
 import { revalidatePath } from "next/cache";
 import { NotFoundError } from "../http-errors";
 import dbConnect from "../mongoose";
+import { IUserDocument } from "@/database/user.model";
 
-
-export async function createUser(params: CreateUserParams): Promise<ActionResponse<User>> {
-  const validationResult = await action(
-    {
-      params
-    }
-  )
-  if (validationResult instanceof Error) { return handleError(validationResult) as ErrorResponse }
+export async function createUser(
+  params: CreateUserParams
+): Promise<ActionResponse<IUserDocument>> {
+  const validationResult = await action({
+    params,
+  });
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
 
   const { clerkId, name, username, email, picture } = validationResult.params!;
   try {
@@ -25,63 +27,68 @@ export async function createUser(params: CreateUserParams): Promise<ActionRespon
       name,
       username,
       email,
-      picture
-    })
+      picture,
+    });
     return {
       success: true,
-      data: parseStringify(newUser)
-    }
-
+      data: parseStringify(newUser),
+    };
   } catch (error) {
-    return handleError(error) as ErrorResponse
+    return handleError(error) as ErrorResponse;
   }
 }
 
-export async function updateUser(params: UpdateUserParams){
- const validationResult = await action({
-    params
-  })
-    if(validationResult instanceof Error) return handleError(validationResult) as ErrorResponse
-    const {clerkId, name, username, email, picture,path} = validationResult.params! 
-    const updateData = {
+export async function updateUser(params: UpdateUserParams) {
+  const validationResult = await action({
+    params,
+  });
+  if (validationResult instanceof Error)
+    return handleError(validationResult) as ErrorResponse;
+  const { clerkId, name, username, email, picture, path } =
+    validationResult.params!;
+  const updateData = {
     name,
     username,
     email,
-    picture
-  }
+    picture,
+  };
   try {
-    const updateUser = await UserModel.findOneAndUpdate({clerkId}, updateData, {
-      new: true
-    }) 
-    revalidatePath(path)
+    const updateUser = await UserModel.findOneAndUpdate(
+      { clerkId },
+      updateData,
+      {
+        new: true,
+      }
+    );
+    revalidatePath(path);
     return {
       success: true,
-      data: parseStringify(updateUser)
-    }
+      data: parseStringify(updateUser),
+    };
   } catch (error) {
-    return handleError(error) as ErrorResponse
+    return handleError(error) as ErrorResponse;
   }
 }
 
-export async function deleteUser(params: {clerkId: string}){
+export async function deleteUser(params: { clerkId: string }) {
   const validationResult = await action({
-    params
-  })
-  if(validationResult instanceof Error) return handleError(validationResult) as ErrorResponse
-  const {clerkId} = validationResult.params!
+    params,
+  });
+  if (validationResult instanceof Error)
+    return handleError(validationResult) as ErrorResponse;
+  const { clerkId } = validationResult.params!;
   try {
-    const user = await UserModel.findOne({clerkId})
-    if(!user) throw new NotFoundError('User')
-    await UserModel.findByIdAndDelete(user._id)
-    
-    return {
+    const user = await UserModel.findOne({ clerkId });
+    if (!user) throw new NotFoundError("User");
+    await UserModel.findByIdAndDelete(user._id);
 
+    return {
       success: true,
-    }
+    };
   } catch (error) {
-    return handleError(error) as ErrorResponse
+    return handleError(error) as ErrorResponse;
   }
 }
-export async function tryConnect(){
+export async function tryConnect() {
   await dbConnect();
 }

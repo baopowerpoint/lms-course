@@ -62,6 +62,14 @@ export const Navbar = () => {
             Khoá học
           </Link>
           <Link
+            href="/tests"
+            className={`font-medium hover:text-primary transition-colors ${
+              pathname === "/tests" ? "text-primary" : ""
+            }`}
+          >
+            Bài kiểm tra
+          </Link>
+          <Link
             href="/#about"
             className={`font-medium hover:text-primary transition-colors ${
               pathname === "/#about" ? "text-primary" : ""
@@ -217,6 +225,15 @@ export const Navbar = () => {
             onClick={() => setIsMobileMenuOpen(false)}
           >
             Về chúng tôi
+          </Link>
+          <Link
+            href="/tests"
+            className={`block py-2 font-medium hover:text-primary ${
+              pathname === "/tests" ? "text-primary" : ""
+            }`}
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            Bài kiểm tra
           </Link>
           <Link
             href="/pricing"

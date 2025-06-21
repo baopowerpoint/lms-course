@@ -114,7 +114,7 @@ export default function SubscriptionForm({ price }: SubscriptionFormProps) {
               </div>
               <div className="space-y-2 text-sm">
                 <p>
-                  <span className="font-medium">Ngân hàng:</span> Vietcombank
+                  <span className="font-medium">Ngân hàng:</span> MB Bank
                 </p>
                 <p>
                   <span className="font-medium">Số tài khoản:</span>{" "}
